@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\suhib\\Desktop\\FinalProject\\JobPlatform\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1AF29EBE-52BF-481A-BE3A-11AA0579E261}|JobPlatformBackend.Infrastructure\\JobPlatformBackend.Infrastructure.csproj|c:\\users\\suhib\\desktop\\finalproject\\jobplatform\\jobplatformbackend.infrastructure\\jobplatformbackend.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{1AF29EBE-52BF-481A-BE3A-11AA0579E261}|JobPlatformBackend.Infrastructure\\JobPlatformBackend.Infrastructure.csproj|solutionrelative:jobplatformbackend.infrastructure\\jobplatformbackend.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{1AF29EBE-52BF-481A-BE3A-11AA0579E261}|JobPlatformBackend.Infrastructure\\JobPlatformBackend.Infrastructure.csproj|c:\\users\\suhib\\desktop\\finalproject\\jobplatform\\jobplatformbackend.infrastructure\\src\\database\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1AF29EBE-52BF-481A-BE3A-11AA0579E261}|JobPlatformBackend.Infrastructure\\JobPlatformBackend.Infrastructure.csproj|solutionrelative:jobplatformbackend.infrastructure\\src\\database\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1AF29EBE-52BF-481A-BE3A-11AA0579E261}|JobPlatformBackend.Infrastructure\\JobPlatformBackend.Infrastructure.csproj|c:\\users\\suhib\\desktop\\finalproject\\jobplatform\\jobplatformbackend.infrastructure\\jobplatformbackend.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{1AF29EBE-52BF-481A-BE3A-11AA0579E261}|JobPlatformBackend.Infrastructure\\JobPlatformBackend.Infrastructure.csproj|solutionrelative:jobplatformbackend.infrastructure\\jobplatformbackend.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1AF29EBE-52BF-481A-BE3A-11AA0579E261}|JobPlatformBackend.Infrastructure\\JobPlatformBackend.Infrastructure.csproj|c:\\users\\suhib\\desktop\\finalproject\\jobplatform\\jobplatformbackend.infrastructure\\src\\configuration\\userconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -38,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 18,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Document",
@@ -95,24 +95,25 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "AppDbContext.cs",
               "DocumentMoniker": "C:\\Users\\suhib\\Desktop\\FinalProject\\JobPlatform\\JobPlatformBackend.Infrastructure\\src\\Database\\AppDbContext.cs",
               "RelativeDocumentMoniker": "JobPlatformBackend.Infrastructure\\src\\Database\\AppDbContext.cs",
               "ToolTip": "C:\\Users\\suhib\\Desktop\\FinalProject\\JobPlatform\\JobPlatformBackend.Infrastructure\\src\\Database\\AppDbContext.cs",
               "RelativeToolTip": "JobPlatformBackend.Infrastructure\\src\\Database\\AppDbContext.cs",
-              "ViewState": "AgIAABwAAAAAAAAAAADwvwMAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAA1wBcAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-14T18:31:26.09Z"
+              "WhenOpened": "2026-03-14T18:31:26.09Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "JobPlatformBackend.Infrastructure.csproj",
               "DocumentMoniker": "C:\\Users\\suhib\\Desktop\\FinalProject\\JobPlatform\\JobPlatformBackend.Infrastructure\\JobPlatformBackend.Infrastructure.csproj",
               "RelativeDocumentMoniker": "JobPlatformBackend.Infrastructure\\JobPlatformBackend.Infrastructure.csproj",
-              "ToolTip": "C:\\Users\\suhib\\Desktop\\FinalProject\\JobPlatform\\JobPlatformBackend.Infrastructure\\JobPlatformBackend.Infrastructure.csproj*",
-              "RelativeToolTip": "JobPlatformBackend.Infrastructure\\JobPlatformBackend.Infrastructure.csproj*",
+              "ToolTip": "C:\\Users\\suhib\\Desktop\\FinalProject\\JobPlatform\\JobPlatformBackend.Infrastructure\\JobPlatformBackend.Infrastructure.csproj",
+              "RelativeToolTip": "JobPlatformBackend.Infrastructure\\JobPlatformBackend.Infrastructure.csproj",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAABoAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2026-03-14T18:33:57.24Z",

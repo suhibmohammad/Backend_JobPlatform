@@ -27,6 +27,8 @@ namespace JobPlatform.Domain.Entity
 
 		public Company? Company { get; set; }
 
+		public ICollection<Post> Posts { get; set; } = new List<Post>();
+
 		public ICollection<Application> Applications { get; set; } = new List<Application>();		
 		public ICollection<UserSkill> UserSkills { get; set; } = new List<UserSkill>();
 
