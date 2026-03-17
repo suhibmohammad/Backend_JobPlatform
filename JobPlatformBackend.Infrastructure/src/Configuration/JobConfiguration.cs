@@ -1,4 +1,5 @@
 ﻿using JobPlatform.Domain.Entity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -17,7 +18,7 @@ namespace JobPlatformBackend.Infrastructure.src.Configuration
 
 			builder.HasKey(x => x.Id);
 
-			builder.Property(x=> x.Id).ValueGeneratedOnAdd();
+			builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
 			builder.Property(x => x.Title)
 				.IsRequired()
@@ -41,4 +42,6 @@ namespace JobPlatformBackend.Infrastructure.src.Configuration
 				.HasForeignKey(x => x.CompanyId);
 		}
 	}
+	
+	 
 }

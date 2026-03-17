@@ -38,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 18,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
@@ -71,6 +71,19 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\suhib\\Desktop\\FinalProject\\JobPlatform\\JobPlatformBackend.Infrastructure\\src\\Database\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "JobPlatformBackend.Infrastructure\\src\\Database\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\suhib\\Desktop\\FinalProject\\JobPlatform\\JobPlatformBackend.Infrastructure\\src\\Database\\AppDbContext.cs",
+              "RelativeToolTip": "JobPlatformBackend.Infrastructure\\src\\Database\\AppDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-14T18:31:26.09Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
               "Title": "UserConfiguration.cs",
               "DocumentMoniker": "C:\\Users\\suhib\\Desktop\\FinalProject\\JobPlatform\\JobPlatformBackend.Infrastructure\\src\\Configuration\\UserConfiguration.cs",
@@ -92,19 +105,6 @@
               "ViewState": "AgIAAAkAAAAAAAAAAAAuwAoAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-13T14:54:04.501Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AppDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\suhib\\Desktop\\FinalProject\\JobPlatform\\JobPlatformBackend.Infrastructure\\src\\Database\\AppDbContext.cs",
-              "RelativeDocumentMoniker": "JobPlatformBackend.Infrastructure\\src\\Database\\AppDbContext.cs",
-              "ToolTip": "C:\\Users\\suhib\\Desktop\\FinalProject\\JobPlatform\\JobPlatformBackend.Infrastructure\\src\\Database\\AppDbContext.cs",
-              "RelativeToolTip": "JobPlatformBackend.Infrastructure\\src\\Database\\AppDbContext.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAA1wBcAAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-14T18:31:26.09Z",
-              "EditorCaption": ""
             },
             {
               "$type": "Document",
