@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JobPlatform.Domain.Entity
+namespace JobPlatformBackend.Domain.src.Entity
 {
 
 

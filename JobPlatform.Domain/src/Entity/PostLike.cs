@@ -1,6 +1,6 @@
-﻿namespace JobPlatform.Domain.Entity
+﻿namespace JobPlatformBackend.Domain.src.Entity
 {
-	public class PostLike : BaseEnitity
+	public class PostLike : SharedEnitity
 	{
 		// العلاقة مع Post
 		public int PostId { get; set; }

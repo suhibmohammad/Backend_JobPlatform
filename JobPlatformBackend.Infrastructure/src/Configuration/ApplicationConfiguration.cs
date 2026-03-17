@@ -1,4 +1,4 @@
-﻿using JobPlatform.Domain.Entity;
+﻿using JobPlatformBackend.Domain.src.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -16,9 +16,10 @@ namespace JobPlatformBackend.Infrastructure.src.Configuration
 				.IsRequired()
 				.HasMaxLength(500);
 
-			builder.HasOne(x => x.Job)
-				.WithMany()
-				.HasForeignKey(x => x.JobId);
+			builder.HasOne(a => a.Job)
+			.WithMany(j => j.Applications)
+			.HasForeignKey(a => a.JobId)
+			.OnDelete(DeleteBehavior.Cascade);
 
 			builder.HasOne(x => x.User)
 				.WithMany(u => u.Applications)

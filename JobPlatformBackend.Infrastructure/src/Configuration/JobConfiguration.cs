@@ -1,4 +1,4 @@
-﻿using JobPlatform.Domain.Entity;
+﻿using JobPlatformBackend.Domain.src.Entity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

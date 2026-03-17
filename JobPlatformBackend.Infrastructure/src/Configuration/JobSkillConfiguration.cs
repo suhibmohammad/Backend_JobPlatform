@@ -1,4 +1,4 @@
-﻿using JobPlatform.Domain.Entity;
+﻿using JobPlatformBackend.Domain.src.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,15 +10,16 @@ namespace JobPlatformBackend.Infrastructure.src.Configuration
 		{
 			builder.ToTable("JobSkills");
 
-			builder.HasKey(x => new { x.JobId, x.SkillId });
-
+			builder.HasKey(x => x.Id);
 			builder.HasOne(x => x.Job)
 				.WithMany(j => j.JobSkills)
 				.HasForeignKey(x => x.JobId);
 
-			builder.HasOne(x => x.Skill)
-				.WithMany()
-				.HasForeignKey(x => x.SkillId);
+			builder.HasOne(js => js.Skill)
+		.WithMany(s => s.JobSkills)
+		.HasForeignKey(js => js.SkillId);
+			builder.HasIndex(x => new { x.JobId, x.SkillId }).IsUnique();
+
 		}
 	}
 }

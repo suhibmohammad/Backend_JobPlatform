@@ -1,4 +1,4 @@
-﻿namespace JobPlatform.Domain.Entity
+﻿namespace JobPlatformBackend.Domain.src.Entity
 {
 	public abstract class BaseEnitity
 	{

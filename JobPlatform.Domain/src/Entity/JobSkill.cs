@@ -1,7 +1,8 @@
-﻿namespace JobPlatform.Domain.Entity
+﻿namespace JobPlatformBackend.Domain.src.Entity
 {
-	public class JobSkill
+	public class JobSkill:BaseEnitity
 	{
+		
 		public int JobId { get; set; }
 		public Job Job { get; set; }
 

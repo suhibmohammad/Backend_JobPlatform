@@ -1,4 +1,4 @@
-﻿using JobPlatform.Domain.Entity;
+﻿using JobPlatformBackend.Domain.src.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,7 +22,7 @@ namespace JobPlatformBackend.Infrastructure.src.Configuration
 
 			builder.HasOne(x => x.User)
 				.WithMany(u => u.PostComments)
-				.HasForeignKey(x => x.UserId);
+				.HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
 		}
 	}
 }
