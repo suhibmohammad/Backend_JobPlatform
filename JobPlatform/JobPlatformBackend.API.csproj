@@ -19,8 +19,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\JobPlatformBackend.Infrastructure\JobPlatformBackend.Infrastructure.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\JobPlatformBackend.Business\JobPlatformBackend.Business.csproj" />
+		<ProjectReference Include="..\JobPlatformBackend.Infrastructure\JobPlatformBackend.Infrastructure.csproj" />
+	</ItemGroup>
 
 </Project>

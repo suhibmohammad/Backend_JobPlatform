@@ -1,4 +1,8 @@
+using JobPlatformBackend.Business.src.Services.Abstractions;
+using JobPlatformBackend.Business.src.Services.Implementations;
+using JobPlatformBackend.Domain.src.Abstractions;
 using JobPlatformBackend.Infrastructure.src.Database;
+using JobPlatformBackend.Infrastructure.src.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,10 +19,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
-
-
-
-var app = builder.Build();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped(typeof(BaseService<,>));
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

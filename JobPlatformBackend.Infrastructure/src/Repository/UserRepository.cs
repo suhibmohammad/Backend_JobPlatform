@@ -1,6 +1,5 @@
 ﻿using JobPlatformBackend.Domain.src.Abstractions;
-using JobPlatformBackend.Domain.src.Common;
-using JobPlatformBackend.Domain.src.Entity;
+ using JobPlatformBackend.Domain.src.Entity;
 using JobPlatformBackend.Infrastructure.src.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -24,6 +23,7 @@ namespace JobPlatformBackend.Infrastructure.src.Repository
 		ApplicationDbContext = applicatoinDbContext;
 			_logger = logger;
 			_Users = ApplicationDbContext.Set<User>();
+			
 		}
 		 
 		public async Task<User> CreateAdminAsync(User user)

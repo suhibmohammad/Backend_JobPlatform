@@ -11,7 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JobPlatform\JobPlatformBackend.API.csproj" />
+    <ProjectReference Include="..\JobPlatform.Domain\JobPlatformBackend.Domain.csproj" />
+    <ProjectReference Include="..\JobPlatformBackend.Contracts\JobPlatformBackend.Contracts.csproj" />
+    <ProjectReference Include="..\JobPlatformBackend.Infrastructure\JobPlatformBackend.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

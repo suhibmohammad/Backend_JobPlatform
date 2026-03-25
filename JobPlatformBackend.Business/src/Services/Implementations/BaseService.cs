@@ -1,0 +1,102 @@
+﻿using JobPlatformBackend.Contracts.Contracts.Shared;
+using JobPlatformBackend.Domain.src.Abstractions;
+using JobPlatformBackend.Domain.src.Entity;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Concurrent;
+using System.Linq.Expressions;
+using System.Reflection;
+
+namespace JobPlatformBackend.Business.src.Services.Implementations
+{
+	public class BaseService<TEntity, TDto> where TEntity : BaseEnitity
+	{
+		private readonly IBaseRepository<TEntity> _repo;
+
+		// 1. نظام Caching لتخزين الخصائص النصية لكل نوع Entity لضمان سرعة خيالية
+		private static readonly ConcurrentDictionary<Type, PropertyInfo[]> _stringPropsCache = new();
+
+		public BaseService(IBaseRepository<TEntity> repo)
+		{
+			_repo = repo;
+		}
+
+		public async Task<IEnumerable<TDto>> GetAll(QueryOptions options, Expression<Func<TEntity, TDto>> mapper)
+		{
+			var query = _repo.Query().AsNoTracking();
+
+			// --- 1. البحث الديناميكي (Optimized & Safe) ---
+			if (!string.IsNullOrEmpty(options.SearchKeyword))
+			{
+				// سحب الخصائص من الـ Cache بدلاً من عمل Reflection في كل طلب
+				var stringProps = _stringPropsCache.GetOrAdd(typeof(TEntity), t =>
+					t.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+					 .Where(p => p.PropertyType == typeof(string) &&
+								 !p.Name.Contains("Password", StringComparison.OrdinalIgnoreCase)) // استبعاد أي حقل كلمة سر
+					 .ToArray());
+
+				if (stringProps.Any())
+				{
+					var param = Expression.Parameter(typeof(TEntity), "x");
+					var searchConstant = Expression.Constant(options.SearchKeyword);
+					var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) })!;
+
+					Expression? combined = null;
+
+					foreach (var prop in stringProps)
+					{
+						var propAccess = Expression.Property(param, prop);
+
+						// بناء Filter يحمي من الـ Null ويقوم بالبحث
+						// (x.Prop != null && x.Prop.Contains(keyword))
+						var notNull = Expression.NotEqual(propAccess, Expression.Constant(null));
+						var callContains = Expression.Call(propAccess, containsMethod, searchConstant);
+						var filter = Expression.AndAlso(notNull, callContains);
+
+						combined = combined == null ? filter : Expression.OrElse(combined, filter);
+					}
+
+					if (combined != null)
+						query = query.Where(Expression.Lambda<Func<TEntity, bool>>(combined, param));
+				}
+			}
+
+			// --- 2. الترتيب الديناميكي (Robust) ---
+			if (!string.IsNullOrEmpty(options.SortBy))
+			{
+				// فحص وجود الخاصية مع مراعاة Case-insensitive
+				var prop = typeof(TEntity).GetProperty(options.SortBy,
+					BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+
+				if (prop != null)
+				{
+					var param = Expression.Parameter(typeof(TEntity), "x");
+					var propAccess = Expression.Property(param, prop);
+					var lambda = Expression.Lambda(propAccess, param);
+
+					string methodName = options.SortDescending ? "OrderByDescending" : "OrderBy";
+
+					// استخدام Reflection لبناء استعلام الترتيب بشكل ديناميكي صحيح
+					var resultExp = Expression.Call(
+						typeof(Queryable),
+						methodName,
+						new Type[] { typeof(TEntity), prop.PropertyType },
+						query.Expression,
+						Expression.Quote(lambda)
+					);
+					query = query.Provider.CreateQuery<TEntity>(resultExp);
+				}
+			}
+
+			// --- 3. الترقيم (Pagination) ---
+			int page = Math.Max(1, options.PageNumber);
+			int size = Math.Clamp(options.PageSize, 1, 100); // استخدام Math.Clamp كطريقة أنظف
+
+			// --- 4. التحويل والتنفيذ (Final Execution) ---
+			return await query
+				.Skip((page - 1) * size)
+				.Take(size)
+				.Select(mapper)
+				.ToListAsync();
+		}
+	}
+}

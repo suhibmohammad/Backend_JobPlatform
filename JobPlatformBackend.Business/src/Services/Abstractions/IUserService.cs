@@ -1,8 +1,8 @@
 ﻿using JobPlatformBackend.API.Contracts.User.GetAll;
 using JobPlatformBackend.API.Contracts.User.Shared;
 using JobPlatformBackend.API.Contracts.User.Update;
-using JobPlatformBackend.Domain.src.Common;
-using System;
+using JobPlatformBackend.Contracts.Contracts.Shared;
+ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,13 +12,13 @@ namespace JobPlatformBackend.Business.src.Services.Abstractions
 {
 	public interface IUserService
 	{
+
+		Task<bool> UpdateUserAsync(int id, UpdateUserRequest updateUserRequest);
 		Task<IEnumerable<UserDto>>GetAllUserAsync(QueryOptions queryOptions);
-		Task<UserResponse> GetUserByIdAsync(int userId);
 
-		Task<UserResponse> GetUserByEmailAsync(string email);
-
-		Task<UserResponse> UpdateUserAsync(int userId,UpdateUserRequest request);
-
+		Task<UserDto?> GetUserByIdAsync(int id, CancellationToken cancellationToken=default);
 		Task<bool> DeleteUserByIdAsync(int userId);
+
+		Task<UserDto?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default);
 	}
 }
