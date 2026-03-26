@@ -36,6 +36,10 @@ namespace JobPlatformBackend.Domain.src.Entity
 
 		public string? CoverImageUrl { get; set; }
 
+		public ICollection<UserRefreshToken> RefreshTokens { get; set; }
+		public string? EmailVerificationCode { get; set; }
+		public DateTime? VerificationCodeExpiry { get; set; }
+		public bool IsEmailVerified { get; set; } = false;
 		public Company? Company { get; set; }
 
 		// الوظائف التي قدم عليها

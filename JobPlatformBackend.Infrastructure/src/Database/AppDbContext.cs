@@ -14,6 +14,7 @@ namespace JobPlatformBackend.Infrastructure.src.Database
  		public DbSet<User> Users { get; set; }
 		public DbSet<Company>Companies { get; set; }
 
+		public DbSet<UserRefreshToken> UserRefreshToken { get; set; }
 		public DbSet<Application> Applications { get; set; }	
 
 		public DbSet<Job> Jobs { get; set; }

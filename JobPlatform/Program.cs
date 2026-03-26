@@ -1,9 +1,15 @@
+using Ganss.Xss;
+using JobPlatformBackend.API.Middleware;
+using JobPlatformBackend.Business.src.Managers;
 using JobPlatformBackend.Business.src.Services.Abstractions;
 using JobPlatformBackend.Business.src.Services.Implementations;
 using JobPlatformBackend.Domain.src.Abstractions;
 using JobPlatformBackend.Infrastructure.src.Database;
 using JobPlatformBackend.Infrastructure.src.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,11 +25,57 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+
+
+
+builder.Services.AddTransient<LoggingMiddleWare>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped(typeof(BaseService<,>));
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
- var app = builder.Build();
+builder.Services.AddScoped<JwtManager>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddSingleton<HtmlSanitizer>();
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
+builder.Services.AddScoped<ISanitizerService,SanitizerService>();   
+
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        var jwtSection = builder.Configuration.GetSection("JwtOptions");
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSection["Issuer"],
+            ValidAudience = jwtSection["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtSection["SecretKey"])
+                )
+        };
+        options.Events = new JwtBearerEvents { 
+        OnAuthenticationFailed = context =>
+        {
+			Console.WriteLine("Jwt Auth Failed"+ context.Exception.Message);
+            return Task.CompletedTask;
+        }
+        };
+    });
+
+
+
+
+
+
+
+
+
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -31,9 +83,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<LoggingMiddleWare>();
+
+app.UseExceptionHandler("/error");
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseCors("AllowAll");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

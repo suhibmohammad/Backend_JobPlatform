@@ -11,6 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="HtmlSanitizer" Version="8.1.870" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\JobPlatform.Domain\JobPlatformBackend.Domain.csproj" />
     <ProjectReference Include="..\JobPlatformBackend.Contracts\JobPlatformBackend.Contracts.csproj" />
     <ProjectReference Include="..\JobPlatformBackend.Infrastructure\JobPlatformBackend.Infrastructure.csproj" />

@@ -12,8 +12,7 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 	{
 		private readonly IBaseRepository<TEntity> _repo;
 
-		// 1. نظام Caching لتخزين الخصائص النصية لكل نوع Entity لضمان سرعة خيالية
-		private static readonly ConcurrentDictionary<Type, PropertyInfo[]> _stringPropsCache = new();
+ 		private static readonly ConcurrentDictionary<Type, PropertyInfo[]> _stringPropsCache = new();
 
 		public BaseService(IBaseRepository<TEntity> repo)
 		{
@@ -24,14 +23,12 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 		{
 			var query = _repo.Query().AsNoTracking();
 
-			// --- 1. البحث الديناميكي (Optimized & Safe) ---
-			if (!string.IsNullOrEmpty(options.SearchKeyword))
+ 			if (!string.IsNullOrEmpty(options.SearchKeyword))
 			{
-				// سحب الخصائص من الـ Cache بدلاً من عمل Reflection في كل طلب
-				var stringProps = _stringPropsCache.GetOrAdd(typeof(TEntity), t =>
+ 				var stringProps = _stringPropsCache.GetOrAdd(typeof(TEntity), t =>
 					t.GetProperties(BindingFlags.Public | BindingFlags.Instance)
 					 .Where(p => p.PropertyType == typeof(string) &&
-								 !p.Name.Contains("Password", StringComparison.OrdinalIgnoreCase)) // استبعاد أي حقل كلمة سر
+								 !p.Name.Contains("Password", StringComparison.OrdinalIgnoreCase))  
 					 .ToArray());
 
 				if (stringProps.Any())
@@ -45,9 +42,7 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 					foreach (var prop in stringProps)
 					{
 						var propAccess = Expression.Property(param, prop);
-
-						// بناء Filter يحمي من الـ Null ويقوم بالبحث
-						// (x.Prop != null && x.Prop.Contains(keyword))
+ 
 						var notNull = Expression.NotEqual(propAccess, Expression.Constant(null));
 						var callContains = Expression.Call(propAccess, containsMethod, searchConstant);
 						var filter = Expression.AndAlso(notNull, callContains);
@@ -60,11 +55,9 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 				}
 			}
 
-			// --- 2. الترتيب الديناميكي (Robust) ---
-			if (!string.IsNullOrEmpty(options.SortBy))
+ 			if (!string.IsNullOrEmpty(options.SortBy))
 			{
-				// فحص وجود الخاصية مع مراعاة Case-insensitive
-				var prop = typeof(TEntity).GetProperty(options.SortBy,
+ 				var prop = typeof(TEntity).GetProperty(options.SortBy,
 					BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
 
 				if (prop != null)
@@ -75,8 +68,7 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 
 					string methodName = options.SortDescending ? "OrderByDescending" : "OrderBy";
 
-					// استخدام Reflection لبناء استعلام الترتيب بشكل ديناميكي صحيح
-					var resultExp = Expression.Call(
+ 					var resultExp = Expression.Call(
 						typeof(Queryable),
 						methodName,
 						new Type[] { typeof(TEntity), prop.PropertyType },
