@@ -21,6 +21,22 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 {
 	public class UserService(AppDbContext _context,IUserRepository _userRepository,BaseService<User,UserDto> _base,ILogger<UserService>_logger) : IUserService
 	{
+		public async Task<bool> AddSkillToUserAsync(int userId, string skillName)
+		{	
+			var user =await _context.Users.Include(u=>u.UserSkills).FirstOrDefaultAsync(u=>u.Id==userId);
+			if (user == null) return false;
+			var skill = await _context.Skills.FirstOrDefaultAsync(s => s.Name.ToLower() == skillName.ToLower());
+			if (skill == null)
+			{
+				skill= new Skill { Name = skillName };
+				_context.Skills.Add(skill);
+				await _context.SaveChangesAsync();
+			}
+			user.UserSkills.Add(new UserSkill { UserID = userId, SkillId = skill.Id });	
+			await _context.SaveChangesAsync();
+			return true;
+		}
+
 		public async Task<bool> DeleteUserByIdAsync(int userId)
 		{
 
@@ -99,6 +115,10 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 				throw;
 			}
 		}
+
+	
+
+		
 		//[EmailAddress]
 		//string? Email,
 		//string? PhoneNumber,

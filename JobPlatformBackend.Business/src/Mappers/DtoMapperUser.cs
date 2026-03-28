@@ -29,7 +29,6 @@ namespace JobPlatformBackend.Business.src.Mappers
 		public static Expression<Func<User, UserDto>> ToUserDto =
 			user => new UserDto(user.Id, user.Name, user.Email, user.Role.ToString(), user.Active, user.PhoneNumber, user.ProfileImageUrl, user.Headline, user.Location, user.About, user.UserSkills.Select(s => new UserSkillDto(s.Skill.Name)).ToList());
 		
-
-	}
+ 	}
 	}
 

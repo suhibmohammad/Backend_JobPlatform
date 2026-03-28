@@ -1,8 +1,88 @@
 [
   {
+    "ContainingType": "JobPlatformBackend.API.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/v1/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "JobPlatformBackend.Contracts.Contracts.User.GetAll.UserCredentials",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobPlatformBackend.API.Controllers.AuthController",
+    "Method": "CreateAccount",
+    "RelativePath": "api/v1/Auth/Regester",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "requests",
+        "Type": "JobPlatformBackend.Contracts.Contracts.User.Create.CreateUserRequests",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobPlatformBackend.API.Controllers.SkillContorller",
+    "Method": "AddSkill",
+    "RelativePath": "api/v1/SkillContorller",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "skill",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobPlatformBackend.API.Controllers.SkillContorller",
+    "Method": "RemoveSkill",
+    "RelativePath": "api/v1/SkillContorller/{skillId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "skillId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobPlatformBackend.API.Controllers.SkillContorller",
+    "Method": "GetUsersBySkill",
+    "RelativePath": "api/v1/SkillContorller/{skillName}/users",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "skillName",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "JobPlatformBackend.API.Controllers.UserController",
     "Method": "GetAllUser",
-    "RelativePath": "v1/Users",
+    "RelativePath": "api/v1/Users",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -48,7 +128,7 @@
   {
     "ContainingType": "JobPlatformBackend.API.Controllers.UserController",
     "Method": "GetUserById",
-    "RelativePath": "v1/Users/{id}",
+    "RelativePath": "api/v1/Users/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -64,7 +144,7 @@
   {
     "ContainingType": "JobPlatformBackend.API.Controllers.UserController",
     "Method": "DeleteUserByIdAsync",
-    "RelativePath": "v1/Users/{id}",
+    "RelativePath": "api/v1/Users/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -90,7 +170,7 @@
   {
     "ContainingType": "JobPlatformBackend.API.Controllers.UserController",
     "Method": "UpdateUser",
-    "RelativePath": "v1/Users/{id}",
+    "RelativePath": "api/v1/Users/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -111,7 +191,7 @@
   {
     "ContainingType": "JobPlatformBackend.API.Controllers.UserController",
     "Method": "GetUserByEmail",
-    "RelativePath": "v1/Users/Email/{email}",
+    "RelativePath": "api/v1/Users/Email/{email}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -133,6 +213,16 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "JobPlatformBackend.API.Controllers.UserController",
+    "Method": "GetUserProfileAsync",
+    "RelativePath": "api/v1/Users/profile",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "JobPlatform.Controllers.WeatherForecastController",

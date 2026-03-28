@@ -1,5 +1,6 @@
 ﻿using JobPlatformBackend.API.Contracts.User.Shared;
 using JobPlatformBackend.Business.src.Managers;
+using JobPlatformBackend.Business.src.Mappers;
 using JobPlatformBackend.Business.src.Services.Abstractions;
 using JobPlatformBackend.Contracts.Contracts.Shared;
 using JobPlatformBackend.Contracts.Contracts.User.Create;
@@ -56,7 +57,7 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 
 		}
 
-		public async Task<UserDto> CreateUserAsync(CreateUserRequests requests)
+		public async Task<CreateUserResponse> CreateUserAsync(CreateUserRequests requests)
 		{
 			try { 
 			var sanitizedDto=_sanitizerService.SanitizeDto(requests);
@@ -83,24 +84,34 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 						throw new ArgumentException($"Property {property.Name} cannot be empty or whitespace.");
 					}
 				}
-				return new UserDto(
-	Id: 1,
-	Name: "Suhaib",
-	Email: "suhaib@example.com",
-	Role: "Admin",
-	Active: true,
-	PhoneNumber: "0791234567",
-	ProfileImageUrl: "https://example.com/image.jpg",
-	Headline: "Full Stack Developer",
-	Location: "Amman",
-	About: "Passionate developer يحب يتعلم أشياء جديدة 🔥",
-	Skills: new List<UserSkillDto?>
-	{
-		new UserSkillDto("C#"),
-		new UserSkillDto("React"),
-		new UserSkillDto("SQL")
-	}
-);
+				var userEntity = new User
+				{
+					Name = sanitizedDto.Name,
+					Email = sanitizedDto.Email,
+					HashPassword = PassswordService.HashPassword(sanitizedDto.Password),
+					PhoneNumber = sanitizedDto.PhoneNumber,
+					ProfileImageUrl = sanitizedDto.ProfileImageUrl,
+					Headline = sanitizedDto.Headline,
+					Location = sanitizedDto.Location,
+					About = sanitizedDto.About,
+					CoverImageUrl = sanitizedDto.CoverImageUrl,
+					CompanyId = sanitizedDto.CompanyId,
+					Role = Role.User,
+					Active = true,
+					IsDeleted = false,
+
+					UserSkills = sanitizedDto.SkillIds != null
+			? sanitizedDto.SkillIds.Select(skillId => new UserSkill
+			{
+				SkillId = skillId
+			}).ToList()
+			: new List<UserSkill>()
+				};
+				await _userRepository.AddAsync(userEntity);
+				await _userRepository.SaveChangesAsync();
+
+				return userEntity.ToDto();
+
 			} 
 			catch (Exception ex) {
 
@@ -137,5 +148,7 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 		{
 			throw new NotImplementedException();
 		}
+
+		 
 	}
 }

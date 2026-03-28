@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\suhib\\Desktop\\JobPlatform\\JobPlatform.Domain\\JobPlatformBackend.Domain.csproj",
+      "projectUniqueName": "D:\\Doroob\\JobPlatform.Domain\\JobPlatformBackend.Domain.csproj",
       "projectName": "JobPlatformBackend.Domain",
-      "projectPath": "C:\\Users\\suhib\\Desktop\\JobPlatform\\JobPlatform.Domain\\JobPlatformBackend.Domain.csproj",
+      "projectPath": "D:\\Doroob\\JobPlatform.Domain\\JobPlatformBackend.Domain.csproj",
       "packagesPath": "C:\\Users\\suhib\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\suhib\\Desktop\\JobPlatform\\JobPlatform.Domain\\obj\\",
+      "outputPath": "D:\\Doroob\\JobPlatform.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

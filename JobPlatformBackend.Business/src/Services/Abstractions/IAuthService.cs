@@ -13,7 +13,7 @@ namespace JobPlatformBackend.Business.src.Services.Abstractions
 	public interface IAuthService
 	{
 		Task SendVerificationCodeAsync(string email); 
-		Task<UserDto> CreateUserAsync(CreateUserRequests requests);
+		Task<CreateUserResponse> CreateUserAsync(CreateUserRequests requests);
 
 		Task<string> AuthenticateUserAsync(UserCredentials userCredentials);
 

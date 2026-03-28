@@ -39,7 +39,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<HtmlSanitizer>();
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
 builder.Services.AddScoped<ISanitizerService,SanitizerService>();   
-
+builder.Services.AddScoped<ISkillRepository,SkillRepository>();
+builder.Services.AddScoped<ISkillService, SkillService>();
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
