@@ -12,14 +12,17 @@ namespace JobPlatformBackend.Business.src.Services.Abstractions
 		string GenerateOtp();
 		string HashOtp(string otp);
 		bool VerifyOtp(string otp, string hashedOtp);
-		 Task<bool> ConfirmResetPasswordAsync(string email, string otp, string newPassword)ك
-
+ 
 
 		void SetVerification(User user, string hashedOtp, TimeSpan expiry);
 		Task SendEmailVerificationAsync(User user);
 		Task SendPasswordResetCodeAsync(User user);
+		 Task<bool> ExecutePasswordResetAsync(string email, string otp, string newPassword);
+		 Task<bool> ForgetPasswordAsync(string email);
 
-		Task <bool> VerifyEmailCodeAsync(User user, string otp);
+		 Task<bool> ValidateResetCodeAsync(string email, string otp);
+
+		Task<bool> VerifyEmailCodeAsync(User user, string otp);
 
 
 	}

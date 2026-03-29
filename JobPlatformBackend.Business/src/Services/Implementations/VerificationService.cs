@@ -121,6 +121,69 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			return true;
 		}
 
-	 
+		public async Task<bool> ForgetPasswordAsync(string email)
+		{
+			var user = await _userRepository.GetUserByEmailAsync(email);
+
+			if (user is null)
+				throw new BadRequestException("User not found");
+
+ 			var otp = GenerateOtp();
+
+ 			string hashedOtp = HashOtp(otp);
+
+ 			user.EmailVerificationCode = hashedOtp;
+			user.VerificationCodeExpiry = DateTime.UtcNow.AddMinutes(5);
+
+ 			string subject = "🔒 رمز إعادة تعيين كلمة المرور";
+			string htmlMessage = _emailTemplateService.GetResetPasswordEmail(otp);
+
+			// Send email
+			var emailSent = await _emailService.SendEmailAsync(user.Email, subject, htmlMessage);
+
+			if (!emailSent)
+				throw new ArgumentException("Failed to send reset password email.");
+
+			// Save changes
+			await _userRepository.SaveChangesAsync();
+
+			return true;
+		}
+
+		public async Task<bool> ValidateResetCodeAsync(string email, string otp)
+		{
+			var user = await _userRepository.GetUserByEmailAsync(email);
+
+			if (user is null || user.VerificationCodeExpiry < DateTime.UtcNow)
+				throw new BadRequestException("الكود انتهت صلاحيته أو المستخدم غير موجود");
+
+			// تحقق من الكود
+			var isValid = VerifyOtp(otp, user.EmailVerificationCode);
+
+			if (!isValid)
+				throw new BadRequestException("Invalid Code");
+
+		 
+			return true;
+		}
+		public async Task<bool> ExecutePasswordResetAsync(string email, string otp, string newPassword)
+		{
+			var user = await _userRepository.GetUserByEmailAsync(email);
+
+			if (user is null || user.VerificationCodeExpiry < DateTime.UtcNow)
+				throw new BadRequestException("Expierd code");
+
+ 			var isValid = VerifyOtp(otp, user.EmailVerificationCode);
+			if (!isValid)
+				throw new BadRequestException("Error in process verification");
+
+ 			user.HashPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+
+ 			user.EmailVerificationCode = null;
+			user.VerificationCodeExpiry = null;
+
+			await _userRepository.SaveChangesAsync();
+			return true;
+		}
 	}
 }

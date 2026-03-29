@@ -57,5 +57,38 @@ namespace JobPlatformBackend.API.Controllers
 			}
 			return Ok(new { Message = "Email verified successfully." });
 		}
+
+		[HttpPost("forgot-password")]
+		public async Task<IActionResult> ForgotPassword([FromBody] string email)
+		{
+ 			var result = await _verification.ForgetPasswordAsync(email);
+
+			return Ok(new { message = "تم إرسال رمز التحقق إلى بريدك الإلكتروني 📧" });
+		}
+		[HttpPost("verify-reset-code")]
+		public async Task<IActionResult> VerifyResetCode([FromBody] VerifyEmailRequest request)
+		{
+ 			var isValid = await _verification.ValidateResetCodeAsync(request.Email, request.Code);
+
+			if (isValid)
+				return Ok(new { message = "الرمز صحيح، يمكنك الآن تغيير كلمة المرور ✅" });
+
+			return BadRequest("الرمز غير صحيح أو انتهت صلاحيته");
+		}
+
+		[HttpPost("reset-password-final")]
+		public async Task<IActionResult> ResetPasswordFinal([FromBody] ResetPasswordFinalRequest request)
+		{
+ 			var result = await _verification.ExecutePasswordResetAsync(
+				request.Email,
+				request.Code,
+				request.NewPassword
+			);
+
+			if (result)
+				return Ok(new { message = "تم تحديث كلمة المرور بنجاح، يمكنك تسجيل الدخول الآن 🚀" });
+
+			return BadRequest("حدث خطأ أثناء تحديث كلمة المرور");
+		}
 	}
 }
