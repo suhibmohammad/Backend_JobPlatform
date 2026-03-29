@@ -44,7 +44,6 @@ namespace JobPlatformBackend.Infrastructure.src.Repository
 		public async Task<User?> GetUserByEmailAsync(string email)
 		{
 			return await _Users
-				   .AsNoTracking()
 				   .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
 		}
 

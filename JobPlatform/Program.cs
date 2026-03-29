@@ -41,7 +41,9 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOpti
 builder.Services.AddScoped<ISanitizerService,SanitizerService>();   
 builder.Services.AddScoped<ISkillRepository,SkillRepository>();
 builder.Services.AddScoped<ISkillService, SkillService>();
-
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IVerificationService, VerificationService>();
+builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

@@ -32,16 +32,32 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "JobPlatformBackend.API.Controllers.SkillContorller",
-    "Method": "AddSkill",
-    "RelativePath": "api/v1/SkillContorller",
+    "ContainingType": "JobPlatformBackend.API.Controllers.AuthController",
+    "Method": "VerifyEmail",
+    "RelativePath": "api/v1/Auth/verify-email",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "skill",
-        "Type": "System.String",
+        "Name": "request",
+        "Type": "JobPlatformBackend.Contracts.Contracts.User.VerifyCode.VerifyEmailRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobPlatformBackend.API.Controllers.SkillContorller",
+    "Method": "AddSkill",
+    "RelativePath": "api/v1/skill",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "JobPlatformBackend.Contracts.Contracts.Skill.AddSkill",
         "IsRequired": true
       }
     ],
@@ -50,7 +66,7 @@
   {
     "ContainingType": "JobPlatformBackend.API.Controllers.SkillContorller",
     "Method": "RemoveSkill",
-    "RelativePath": "api/v1/SkillContorller/{skillId}",
+    "RelativePath": "api/v1/skill/{skillId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -66,7 +82,7 @@
   {
     "ContainingType": "JobPlatformBackend.API.Controllers.SkillContorller",
     "Method": "GetUsersBySkill",
-    "RelativePath": "api/v1/SkillContorller/{skillName}/users",
+    "RelativePath": "api/v1/skill/{skillName}/users",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

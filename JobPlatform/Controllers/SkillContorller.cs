@@ -1,4 +1,5 @@
 ﻿using JobPlatformBackend.Business.src.Services.Abstractions;
+using JobPlatformBackend.Contracts.Contracts.Skill;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -6,7 +7,7 @@ using System.Security.Claims;
 namespace JobPlatformBackend.API.Controllers
 {
 	[ApiController]
-	[Route("api/v1/[controller]")]
+	[Route("api/v1/skill")]
 	public class SkillContorller:ControllerBase
 	{
 		private readonly ISkillService _skillService;
@@ -22,22 +23,22 @@ namespace JobPlatformBackend.API.Controllers
 			return Ok(user);
 		}
 
-		// ✅ Add skill to current user
-		[Authorize]
+ 		[Authorize]
 		[HttpPost]
-		public async Task<IActionResult> AddSkill([FromBody] string skill)
+		public async Task<IActionResult> AddSkill(AddSkill request)
+		
 		{
 			var user = User.FindFirst(ClaimTypes.NameIdentifier);
 
 			if (user == null || !int.TryParse(user.Value, out var userId))
 				return Unauthorized();
 
-			var result = await _skillService.AddSkillToUserAsync(userId, skill);
+			var result = await _skillService.AddSkillToUserAsync(userId, request.AddSkillRequest);
 
 			if (!result)
 				return BadRequest();
 
-			return Ok();
+			return Ok(new {Message="Add Successfuly"});
 		}
 
 		// ✅ Remove skill
@@ -55,7 +56,7 @@ namespace JobPlatformBackend.API.Controllers
 			if (!result)
 				return BadRequest();
 
-			return Ok();
+			return Ok(new {Message="Success Delete Skill"});
 		}
 	}
 }

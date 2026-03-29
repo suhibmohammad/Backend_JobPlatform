@@ -3,6 +3,8 @@ using JobPlatformBackend.Business.src.Services.Abstractions;
 using JobPlatformBackend.Business.src.Services.Implementations;
 using JobPlatformBackend.Contracts.Contracts.User.Create;
 using JobPlatformBackend.Contracts.Contracts.User.GetAll;
+using JobPlatformBackend.Contracts.Contracts.User.VerifyCode;
+using JobPlatformBackend.Domain.src.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -12,7 +14,7 @@ namespace JobPlatformBackend.API.Controllers
 
 	[ApiController]
 	[Route("api/v1/Auth")]
-	public class AuthController(IAuthService _authService,JwtManager _jwtManager):ControllerBase
+	public class AuthController(IAuthService _authService,IUserRepository _userRepository,JwtManager _jwtManager,IVerificationService _verification):ControllerBase
 	{
 
 
@@ -38,6 +40,22 @@ namespace JobPlatformBackend.API.Controllers
 			}
 			var result = await _authService.CreateUserAsync(requests);
 			return Ok(result);
+		}
+
+		[HttpPost("verify-email")]
+		public async Task<IActionResult> VerifyEmail(VerifyEmailRequest request)
+		{
+			var user = await _userRepository.GetUserByEmailAsync(request.Email);
+			if (user == null) { 
+			throw new Exception("User not found.");
+			}
+
+			var result = await _verification.VerifyEmailCodeAsync(user,request.Code);
+			if (!result)
+			{
+				return BadRequest(new { Message = "Invalid or expired Code." });
+			}
+			return Ok(new { Message = "Email verified successfully." });
 		}
 	}
 }

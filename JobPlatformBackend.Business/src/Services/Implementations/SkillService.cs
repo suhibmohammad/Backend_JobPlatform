@@ -4,6 +4,7 @@ using JobPlatformBackend.Business.src.Services.Abstractions;
 using JobPlatformBackend.Contracts.Contracts.Skill;
 using JobPlatformBackend.Domain.src.Abstractions;
 using JobPlatformBackend.Domain.src.Entity;
+using JobPlatformBackend.Domain.src.Exceptions;
 using JobPlatformBackend.Infrastructure.src.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -38,7 +39,7 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			}
 
  			if (user.UserSkills.Any(us => us.SkillId == skill.Id))
-				return false;
+				throw new DuplicateSkillException("This skill is already have by user");
 
 			user.UserSkills.Add(new UserSkill
 			{

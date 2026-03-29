@@ -13,6 +13,7 @@ using JobPlatformBackend.Domain.src.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,12 +28,19 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 
 		private readonly ISanitizerService _sanitizerService;
 
-		public AuthService(IUserRepository userRepository,JwtManager jwtManager,ISanitizerService sanitizerService)
+		private readonly IEmailService _emailService;
+
+		private readonly IVerificationService _verificationService;
+		private readonly IEmailTemplateService _emailTemplateService;
+
+		public AuthService(IEmailService emailService,IVerificationService verificationService,IEmailTemplateService emailTemplate,IUserRepository userRepository,JwtManager jwtManager,ISanitizerService sanitizerService)
 		{
 			_userRepository = userRepository;
 			_jwtManager = jwtManager;
 			_sanitizerService = sanitizerService;
-
+			_emailService = emailService;
+			_verificationService = verificationService;
+			_emailTemplateService = emailTemplate;
 		}
 
 		public async Task<string> AuthenticateUserAsync(UserCredentials userCredentials)
@@ -51,7 +59,11 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			{
 				throw new BadRequestException("Invalid login credentials");
 			}
+			var subject = "مرحباً بك مجدداً في منصة دروب 🚀";
 
+ 			var html = _emailTemplateService.GetWelcomeEmail(user.Name);
+
+			var sendeEmail = await _emailService.SendEmailAsync(user.Email, subject, html);
 			string token = _jwtManager.GenerateAccessToken(user);
 			return token;
 
@@ -59,7 +71,7 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 
 		public async Task<CreateUserResponse> CreateUserAsync(CreateUserRequests requests)
 		{
-			try { 
+			
 			var sanitizedDto=_sanitizerService.SanitizeDto(requests);
 				var IsValidEmail = Validator.IsValidEmail(sanitizedDto.Email);
 				if (!IsValidEmail)
@@ -71,7 +83,10 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 				if (existingUser is not null)
 				{
 					if (!existingUser.IsEmailVerified) {
-						throw new EmailNotVerifiedException("Verification code resent. Please verify your email.");
+						await _verificationService.SendEmailVerificationAsync(existingUser);
+						
+ 					await _userRepository.SaveChangesAsync();
+					throw new EmailNotVerifiedException("Verification code resent. Please verify your email.");
 					}
 					throw new ConflictException("A user with this email alredy exist.");
 				}
@@ -107,16 +122,14 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			}).ToList()
 			: new List<UserSkill>()
 				};
+
 				await _userRepository.AddAsync(userEntity);
+				await  _verificationService.SendEmailVerificationAsync(userEntity);
 				await _userRepository.SaveChangesAsync();
 
 				return userEntity.ToDto();
 
-			} 
-			catch (Exception ex) {
-
-				throw;
-			}
+					
 		}
 
 		public Task<bool> ForgotPasswordAsync(string email)
@@ -148,7 +161,10 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 		{
 			throw new NotImplementedException();
 		}
+ 
 
+	 
 		 
+
 	}
 }
