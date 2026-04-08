@@ -97,27 +97,14 @@ namespace JobPlatformBackend.API.Controllers
 			{
 				return Unauthorized();
 			}
+			 
 
-			var uploadResult = await _cloudinaryService.UploadImageAsync(file,"UserProfilePhotot");
-			if (uploadResult == null ||uploadResult.Error!=null)
-			{
-				return StatusCode(StatusCodes.Status500InternalServerError, "Error uploading image.");
-			}
-			var imageUrl= uploadResult.SecureUrl.ToString();
-			var publicId=uploadResult.PublicId;
 
-			try {
 
-				var success = await _userService.UpdateUserProfilePictureAsync(userId, uploadResult.Url.ToString());
-				if (!success) throw new Exception("Database save failed");
-				return Ok(new { Message = "Profile picture updated successfully.", ImageUrl = uploadResult.Url });
-			}
-			catch (Exception)
-			{
-				// 3. التراجع اليدوي (Rollback) في السحابة لأن الداتا بيس فشلت
-				await _cloudinaryService.DeleteImageAsync(publicId);
-				return StatusCode(500, "Database error, image upload reverted.");
-			}
+				var ImageUrl  = await _userService.UpdateUserProfilePictureAsync( file,userId);
+ 				return Ok(new { Message = "Profile picture updated successfully.", ImageUrl = ImageUrl });
+			
+			
 
 		}
 

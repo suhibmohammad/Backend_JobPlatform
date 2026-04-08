@@ -2,7 +2,8 @@
 using JobPlatformBackend.API.Contracts.User.Shared;
 using JobPlatformBackend.API.Contracts.User.Update;
 using JobPlatformBackend.Contracts.Contracts.Shared;
- using System;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,6 @@ namespace JobPlatformBackend.Business.src.Services.Abstractions
 		Task<bool> DeleteUserByIdAsync(int userId);
 
 		Task<UserDto?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default);
-		Task<bool> UpdateUserProfilePictureAsync(int userId, string imageUrl);
+		Task<string> UpdateUserProfilePictureAsync(IFormFile file, int userId);
 	}
 }

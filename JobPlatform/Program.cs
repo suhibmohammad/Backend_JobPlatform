@@ -51,16 +51,20 @@ builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();  
 builder.Services.AddScoped<ICloudinaryService,CloudinaryService>();
 
-var cloudinarySettings=builder.Configuration.GetSection("CloudinarySettings").Get<CloudinarySettings>();
-var account = new Account(
-    cloudinarySettings?.CloudName,
-    cloudinarySettings?.ApiKey,
-        cloudinarySettings?.ApiSecret
-    )
-    ;
+var cloudinarySection = builder.Configuration.GetSection("CloudinarySettings");
+var cloudName = cloudinarySection["CloudName"];
+var apiKey = cloudinarySection["ApiKey"];
+var apiSecret = cloudinarySection["ApiSecret"];
 
+if (string.IsNullOrEmpty(cloudName) || string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(apiSecret))
+{
+	throw new Exception("Cloudinary settings are missing in appsettings.json");
+}
+
+var account = new Account(cloudName, apiKey, apiSecret);
 builder.Services.AddSingleton(new Cloudinary(account));
 
+ 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -91,7 +95,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 
 
-
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowAll", policy =>
+	{
+		policy
+			.AllowAnyOrigin()   
+			.AllowAnyMethod()   
+			.AllowAnyHeader();  
+	});
+});
 
 
 

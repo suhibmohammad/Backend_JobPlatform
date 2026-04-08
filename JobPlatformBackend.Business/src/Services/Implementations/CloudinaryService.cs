@@ -29,6 +29,7 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 					Folder = folderName,
 					Transformation = new Transformation().Quality("auto").FetchFormat("auto")
 				};
+					
 				uploadResult =await _cloudinary.UploadAsync(uploadParams);
 			}
 			return uploadResult;

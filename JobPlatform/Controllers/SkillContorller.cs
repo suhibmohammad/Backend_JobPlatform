@@ -41,8 +41,10 @@ namespace JobPlatformBackend.API.Controllers
 			return Ok(new {Message="Add Successfuly"});
 		}
 
-		// ✅ Remove skill
-		[HttpDelete("{skillId}")]
+ 
+		
+		
+        [HttpDelete("{skillId}")]
 		[Authorize]
 		public async Task<IActionResult> RemoveSkill(int skillId)
 		{
