@@ -91,14 +91,8 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 					throw new ConflictException("A user with this email alredy exist.");
 				}
 
-				var userDtoProperties = typeof(CreateUserRequests).GetProperties();
-				foreach (var property in userDtoProperties) { 
-				var value=property.GetValue(sanitizedDto);
-					if (value is string strValue && string.IsNullOrWhiteSpace(strValue))
-					{
-						throw new ArgumentException($"Property {property.Name} cannot be empty or whitespace.");
-					}
-				}
+			try
+			{
 				var userEntity = new User
 				{
 					FName = sanitizedDto.FName,
@@ -110,7 +104,12 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 					Headline = sanitizedDto.Headline,
 					Location = sanitizedDto.Location,
 					About = sanitizedDto.About,
+<<<<<<< HEAD
   					Role = Role.User,
+=======
+					CoverImageUrl = sanitizedDto.CoverImageUrl,
+					Role = Role.User,
+>>>>>>> 68131f3b835cca866197072156b25dc63d360e5d
 					Active = true,
 					IsDeleted = false,
 
@@ -123,12 +122,16 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 				};
 
 				await _userRepository.AddAsync(userEntity);
-				await  _verificationService.SendEmailVerificationAsync(userEntity);
+				await _verificationService.SendEmailVerificationAsync(userEntity);
 				await _userRepository.SaveChangesAsync();
 
 				return userEntity.ToDto();
+			}
+			catch (Exception ex) {
+				throw new Exception("Error in register process");
+			}
 
-					
+
 		}
 
 		public Task<bool> ForgotPasswordAsync(string email)

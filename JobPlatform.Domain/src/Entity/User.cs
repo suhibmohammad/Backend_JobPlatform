@@ -14,6 +14,7 @@ namespace JobPlatformBackend.Domain.src.Entity
 
 		public required string LName { get; set; }
 
+		public string ProfileImagePublicId { get; set; }
 		public required string Email { get; set; }
 
 		public required string HashPassword { get; set; }

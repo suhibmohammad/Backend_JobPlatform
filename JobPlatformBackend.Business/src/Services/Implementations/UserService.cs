@@ -7,6 +7,7 @@ using JobPlatformBackend.Contracts.Contracts.Shared;
 using JobPlatformBackend.Contracts.Contracts.UserSkill;
 using JobPlatformBackend.Domain.src.Abstractions;
 using JobPlatformBackend.Domain.src.Entity;
+using JobPlatformBackend.Domain.src.Exceptions;
 using JobPlatformBackend.Infrastructure.src.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -20,9 +21,16 @@ using System.Threading.Tasks;
 
 namespace JobPlatformBackend.Business.src.Services.Implementations
 {
+<<<<<<< HEAD
 	public class UserService(IImageService imageService,AppDbContext _context,IUserRepository _userRepository,BaseService<User,UserDto> _base,ILogger<UserService>_logger) : IUserService
 	{
 		private readonly IImageService _imageService = imageService;
+=======
+	public class UserService(ICloudinaryService cloudinaryService,AppDbContext _context,IUserRepository _userRepository,BaseService<User,UserDto> _base,ILogger<UserService>_logger) : IUserService
+	{
+		private readonly ICloudinaryService _cloudinaryService=cloudinaryService;
+
+>>>>>>> 68131f3b835cca866197072156b25dc63d360e5d
 		public async Task<bool> AddSkillToUserAsync(int userId, string skillName)
 		{	
 			var user =await _context.Users.Include(u=>u.UserSkills).FirstOrDefaultAsync(u=>u.Id==userId);
@@ -75,10 +83,11 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 
 
 		}
-
-		public async Task<UserDto?> GetUserByEmailAsync(string email ,CancellationToken cancellationToken=default)
-		{
-			try
+	public async Task<UserDto?> GetUserByEmailAsync(string email ,CancellationToken cancellationToken=default)	
+		
+		
+		
+		{			try
 			{
 				var userEntity = await _userRepository.Query()
 		.Include(u => u.UserSkills)
@@ -124,17 +133,15 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			var user = await _userRepository.GetByIdAsync(id);
 			if (user == null) return false;
 
-			// جلب كل الخصائص من UpdateUserRequest
 			var requestProps = typeof(UpdateUserRequest).GetProperties();
 			var entityProps = typeof(User).GetProperties();
 
 			foreach (var prop in requestProps)
 			{
 				var value = prop.GetValue(updateUserRequest);
-				if (value != null) // إذا موجود في JSON
+				if (value != null) 
 				{
-					// البحث عن نفس الخاصية في User
-					var userProp = entityProps.FirstOrDefault(p => p.Name == prop.Name);
+ 					var userProp = entityProps.FirstOrDefault(p => p.Name == prop.Name);
 					if (userProp != null && userProp.CanWrite)
 					{
 						userProp.SetValue(user, value);
@@ -148,6 +155,7 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			return true;
 		}
 
+<<<<<<< HEAD
 		public async Task<string> UpdateUserProfilePictureAsync(IFormFile file, int userId)
 		{
 			var user = await _userRepository.GetByIdAsync(userId);
@@ -161,6 +169,54 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			await _userRepository.SaveChangesAsync();
 
 			return url;
+=======
+
+
+
+
+
+		public async Task<string> UpdateUserProfilePictureAsync(IFormFile file,int userId)
+		{
+
+			var user = await _userRepository.GetByIdAsync(userId);
+			if (user == null) throw new BadRequestException ("the user is not found");
+			string? newPublicId = null;
+			string? oldPublicId = user.ProfileImagePublicId;
+			try
+			{
+
+
+				var uploadResult = await _cloudinaryService.UploadImageAsync(file, "Users/UserProfilePhotot");
+				if (uploadResult == null || uploadResult.Error != null)
+				{
+					throw new Exception("Cloudinary upload failed: " + uploadResult?.Error?.Message);
+				}
+				var imageUrl = uploadResult.SecureUrl.ToString();
+				newPublicId = uploadResult.PublicId;
+
+				user.ProfileImageUrl = imageUrl;
+				user.ProfileImagePublicId = newPublicId;
+				await _userRepository.UpdateAsync(user);
+				await _userRepository.SaveChangesAsync();
+
+				if (!string.IsNullOrEmpty(oldPublicId))
+				{
+					await _cloudinaryService.DeleteImageAsync(oldPublicId);
+				}
+
+				_logger.LogInformation("Profile picture for user {UserId} updated to {Url}", userId, imageUrl);
+				return imageUrl;
+			}
+			catch (Exception ex)
+			{
+				if (!string.IsNullOrEmpty(oldPublicId))
+				{
+					await _cloudinaryService.DeleteImageAsync(oldPublicId);
+				}
+				_logger.LogError(ex, "Error while updating profile picture for user {UserId}", userId);
+				throw ;
+  			}
+>>>>>>> 68131f3b835cca866197072156b25dc63d360e5d
 		}
 	}
 }

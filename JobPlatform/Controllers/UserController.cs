@@ -89,6 +89,7 @@ namespace JobPlatformBackend.API.Controllers
 		public async Task<IActionResult> UploadProfilePicture(IFormFile file)
 		{
 			if (file == null || file.Length == 0)
+<<<<<<< HEAD
 				return BadRequest("Please upload a valid image.");
 
  			var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
@@ -105,6 +106,25 @@ namespace JobPlatformBackend.API.Controllers
 			{
 				return BadRequest(ex.Message);
 			}
+=======
+			{
+				return BadRequest("No file uploaded.");
+			}
+			var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+			if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
+			{
+				return Unauthorized();
+			}
+			 
+
+
+
+				var ImageUrl  = await _userService.UpdateUserProfilePictureAsync( file,userId);
+ 				return Ok(new { Message = "Profile picture updated successfully.", ImageUrl = ImageUrl });
+			
+			
+
+>>>>>>> 68131f3b835cca866197072156b25dc63d360e5d
 		}
 
 	}

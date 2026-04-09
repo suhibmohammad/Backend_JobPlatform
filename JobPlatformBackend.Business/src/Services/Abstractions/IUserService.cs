@@ -21,6 +21,10 @@ namespace JobPlatformBackend.Business.src.Services.Abstractions
 		Task<bool> DeleteUserByIdAsync(int userId);
 
 		Task<UserDto?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default);
+<<<<<<< HEAD
 		Task<string> UpdateUserProfilePictureAsync(IFormFile  file, int userId);
+=======
+		Task<string> UpdateUserProfilePictureAsync(IFormFile file, int userId);
+>>>>>>> 68131f3b835cca866197072156b25dc63d360e5d
 	}
 }
