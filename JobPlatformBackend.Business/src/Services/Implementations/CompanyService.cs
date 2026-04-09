@@ -3,6 +3,7 @@ using JobPlatformBackend.Contracts.Contracts.Company.Create;
 using JobPlatformBackend.Contracts.Contracts.User.Shared;
 using JobPlatformBackend.Domain.src.Abstractions;
 using JobPlatformBackend.Domain.src.Entity;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,13 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 	public class CompanyService : ICompanyService
 	{
 		private readonly ICompanyRepository _companyRepository;
+		private readonly IImageService _imageService;
 		private readonly ISanitizerService _sanitizerService;
-		public CompanyService(ICompanyRepository companyRepository,ISanitizerService sanitizerService)
+		public CompanyService(ICompanyRepository companyRepository,IImageService imageService,ISanitizerService sanitizerService)
 		{
 			_companyRepository = companyRepository;
 			_sanitizerService = sanitizerService;
+			_imageService = imageService;
 		}
 		public Task AddAdminToCompanyAsync(int companyId, int userId)
 		{
@@ -66,17 +69,43 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			}
 		}
 
+		public async Task<string> UpdateLogoUrlCompany(IFormFile file,int companyId,int userId)
+		{
+			var company = await _companyRepository.GetByIdAsync(companyId);
+			if (company == null) throw new Exception("Company not found");
+
+			var isAdmin = await _companyRepository.IsUserAdminOfCompanyAsync(companyId, userId);
+			if (!isAdmin) throw new UnauthorizedAccessException();
+
+			var (url, publicId) = await _imageService.ReplaceAsync(file, "JobPlatform/Companies", company.ProfileImagePublicId);
+			company.LogoUrl = url;
+			company.ProfileImagePublicId = publicId;
+			await _companyRepository.UpdateAsync(company);
+			await _companyRepository.SaveChangesAsync();
+			return url;
+		}
+
 		public Task DeleteCompanyAsync(int companyId)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task RemoveAdminFromCompanyAsync(int companyId, int userId)
+		public async Task RemoveAdminFromCompanyAsync(int companyId, int userId,int userDelete)
+		{
+			var user=await _companyRepository.GetOwnerAsync(userId, companyId);
+
+			if (user == null) throw new Exception("User is not the owner of the company.");
+
+			
+
+		}
+
+		public Task UpdateCompanyAsync(CreateCompanyRequest request)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task UpdateCompanyAsync(CreateCompanyRequest request)
+		public Task RemoveAdminFromCompanyAsync(int companyId, int userId)
 		{
 			throw new NotImplementedException();
 		}

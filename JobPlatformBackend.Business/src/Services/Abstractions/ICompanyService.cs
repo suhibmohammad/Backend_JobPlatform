@@ -1,4 +1,5 @@
 ﻿using JobPlatformBackend.Contracts.Contracts.Company.Create;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace JobPlatformBackend.Business.src.Services.Abstractions
 		 Task DeleteCompanyAsync(int companyId);
 		 Task AddAdminToCompanyAsync(int companyId, int userId);
 		 Task RemoveAdminFromCompanyAsync(int companyId, int userId);
+		Task<string> UpdateLogoUrlCompany(IFormFile file, int companyId, int userId);
 	}
 }

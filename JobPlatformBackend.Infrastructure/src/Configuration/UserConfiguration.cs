@@ -15,7 +15,11 @@ namespace JobPlatformBackend.Infrastructure.src.Configuration
 		{
 			builder.HasKey(x => x.Id);
 
-			builder.Property(u => u.Name)
+			builder.Property(u => u.FName)
+				  .IsRequired()
+				  .HasMaxLength(100);
+
+			builder.Property(u => u.LName)
 				  .IsRequired()
 				  .HasMaxLength(100);
 

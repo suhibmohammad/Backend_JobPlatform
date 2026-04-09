@@ -7,6 +7,7 @@ namespace JobPlatformBackend.Domain.src.Abstractions
 		Task AddAdminToCompanyAsync(CompanyAdmin companyAdmin);
 		Task<IDbContextTransaction> BeginTransactionAsync();
 		Task<Company> CreateCompanyAsync(Company company);
-		Task<bool> IsUserAdminOfCompanyAsync(int userId, int companyId);
+		Task<bool> GetOwnerAsync(int userId, int compnyId);
+		Task<bool> IsUserAdminOfCompanyAsync( int companyId, int userId);
 	}
 }

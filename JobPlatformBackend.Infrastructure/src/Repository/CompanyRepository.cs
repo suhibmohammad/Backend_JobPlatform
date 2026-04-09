@@ -1,7 +1,7 @@
 ﻿using JobPlatformBackend.Contracts.Contracts.Company.Create;
 using JobPlatformBackend.Domain.src.Abstractions;
 using JobPlatformBackend.Domain.src.Entity;
-using JobPlatformBackend.Infrastructure.src.Database;
+ using JobPlatformBackend.Infrastructure.src.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
@@ -26,11 +26,16 @@ namespace JobPlatformBackend.Infrastructure.src.Repository
 			_company = _context.Set<Company>();
 		}
 
-		public async Task<bool> IsUserAdminOfCompanyAsync(int userId, int companyId)
+		public async Task<bool> IsUserAdminOfCompanyAsync( int companyId, int userId)
 		{
 			return await _context.CompanyAdmins.AnyAsync(ca => ca.UserId == userId && ca.CompanyId == companyId);
 		}
 		
+		public async Task<bool> GetOwnerAsync(int userId ,int compnyId)
+		{
+		 return	await _context.CompanyAdmins.AnyAsync(x => x.UserId == userId &&x.CompanyId==compnyId&&x.Role==JobPlatformBackend.Domain.src.Entity.RoleCompany.Owner);
+		}
+
 		public async Task AddAdminToCompanyAsync(CompanyAdmin companyAdmin)
 		{
 			await _context.CompanyAdmins.AddAsync(companyAdmin);

@@ -17,17 +17,17 @@ namespace JobPlatformBackend.Business.src.Mappers
 	{
 		public static CreateUserResponse ToDto(this User user)
 		{
-			return new CreateUserResponse(user.Name, user.Email, user.Role.ToString(), user.Active, DateTime.UtcNow);
+			return new CreateUserResponse(user.FName, user.LName, user.Email, user.Role.ToString(), user.Active, DateTime.UtcNow);
 		}
 
 		public static UserDto ToUserIncludeDto(this User user)
 		{
-			return new UserDto(user.Id, user.Name, user.Email, user.Role.ToString(), user.Active, user.PhoneNumber, user.ProfileImageUrl, user.Headline, user.Location, user.About, user.UserSkills.Select(s => new UserSkillDto(s.Skill.Name)).ToList());
+			return new UserDto(user.Id, user.FName, user.LName, user.Email, user.Role.ToString(), user.Active, user.PhoneNumber, user.ProfileImageUrl, user.Headline, user.Location, user.About, user.UserSkills.Select(s => new UserSkillDto(s.Skill.Name)).ToList());
 
 		}
 
 		public static Expression<Func<User, UserDto>> ToUserDto =
-			user => new UserDto(user.Id, user.Name, user.Email, user.Role.ToString(), user.Active, user.PhoneNumber, user.ProfileImageUrl, user.Headline, user.Location, user.About, user.UserSkills.Select(s => new UserSkillDto(s.Skill.Name)).ToList());
+			user => new UserDto(user.Id, user.FName, user.LName, user.Email, user.Role.ToString(), user.Active, user.PhoneNumber, user.ProfileImageUrl, user.Headline, user.Location, user.About, user.UserSkills.Select(s => new UserSkillDto(s.Skill.Name)).ToList());
 		
  	}
 	}

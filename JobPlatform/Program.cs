@@ -50,6 +50,7 @@ builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();  
 builder.Services.AddScoped<ICloudinaryService,CloudinaryService>();
+builder.Services.AddScoped<IImageService, ImageService>();
 
 var cloudinarySettings=builder.Configuration.GetSection("CloudinarySettings").Get<CloudinarySettings>();
 var account = new Account(

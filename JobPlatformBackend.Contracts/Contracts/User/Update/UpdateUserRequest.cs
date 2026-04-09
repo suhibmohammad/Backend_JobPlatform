@@ -3,7 +3,8 @@
 namespace JobPlatformBackend.API.Contracts.User.Update
 {
 	public record UpdateUserRequest(
-		string? Name,
+		string? FName,
+		string? LName,
  		string? ProfileImageUrl,
 		string? Headline,
 		string? Location,

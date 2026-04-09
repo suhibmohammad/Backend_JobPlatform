@@ -84,41 +84,27 @@ namespace JobPlatformBackend.API.Controllers
 		}
 
 
-		[HttpPost("upload-Profile-Picture")]
-		[Authorize]
-		public async Task<ActionResult> UploadProfilePicture(IFormFile file)
+		[HttpPost("upload-image")]
+		[Authorize] 
+		public async Task<IActionResult> UploadProfilePicture(IFormFile file)
 		{
 			if (file == null || file.Length == 0)
-			{
-				return BadRequest("No file uploaded.");
-			}
-			var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-			if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
-			{
-				return Unauthorized();
-			}
+				return BadRequest("Please upload a valid image.");
 
-			var uploadResult = await _cloudinaryService.UploadImageAsync(file,"UserProfilePhotot");
-			if (uploadResult == null ||uploadResult.Error!=null)
+ 			var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+			if (userIdClaim == null) return Unauthorized();
+
+			int userId = int.Parse(userIdClaim.Value);
+
+			try
 			{
-				return StatusCode(StatusCodes.Status500InternalServerError, "Error uploading image.");
+				var imageUrl = await _userService.UpdateUserProfilePictureAsync(file, userId);
+				return Ok(new { Message = "Profile picture updated successfully.", ImageUrl = imageUrl });
 			}
-			var imageUrl= uploadResult.SecureUrl.ToString();
-			var publicId=uploadResult.PublicId;
-
-			try {
-
-				var success = await _userService.UpdateUserProfilePictureAsync(userId, uploadResult.Url.ToString());
-				if (!success) throw new Exception("Database save failed");
-				return Ok(new { Message = "Profile picture updated successfully.", ImageUrl = uploadResult.Url });
-			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				// 3. التراجع اليدوي (Rollback) في السحابة لأن الداتا بيس فشلت
-				await _cloudinaryService.DeleteImageAsync(publicId);
-				return StatusCode(500, "Database error, image upload reverted.");
+				return BadRequest(ex.Message);
 			}
-
 		}
 
 	}

@@ -78,7 +78,6 @@ namespace JobPlatformBackend.Infrastructure.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LogoUrl")
@@ -89,6 +88,12 @@ namespace JobPlatformBackend.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("ProfileImagePublicId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -323,6 +328,11 @@ namespace JobPlatformBackend.Infrastructure.Migrations
                     b.Property<string>("EmailVerificationCode")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("HashPassword")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -340,18 +350,21 @@ namespace JobPlatformBackend.Infrastructure.Migrations
                     b.Property<bool>("IsEmailVerified")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Location")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("LName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Location")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("ProfileImagePublicId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfileImageUrl")
                         .HasMaxLength(500)

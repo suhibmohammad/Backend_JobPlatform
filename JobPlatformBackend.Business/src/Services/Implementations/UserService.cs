@@ -8,6 +8,7 @@ using JobPlatformBackend.Contracts.Contracts.UserSkill;
 using JobPlatformBackend.Domain.src.Abstractions;
 using JobPlatformBackend.Domain.src.Entity;
 using JobPlatformBackend.Infrastructure.src.Database;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -19,8 +20,9 @@ using System.Threading.Tasks;
 
 namespace JobPlatformBackend.Business.src.Services.Implementations
 {
-	public class UserService(AppDbContext _context,IUserRepository _userRepository,BaseService<User,UserDto> _base,ILogger<UserService>_logger) : IUserService
+	public class UserService(IImageService imageService,AppDbContext _context,IUserRepository _userRepository,BaseService<User,UserDto> _base,ILogger<UserService>_logger) : IUserService
 	{
+		private readonly IImageService _imageService = imageService;
 		public async Task<bool> AddSkillToUserAsync(int userId, string skillName)
 		{	
 			var user =await _context.Users.Include(u=>u.UserSkills).FirstOrDefaultAsync(u=>u.Id==userId);
@@ -116,18 +118,7 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			}
 		}
 
-	
-
-		
-		//[EmailAddress]
-		//string? Email,
-		//string? PhoneNumber,
-		//string? ProfileImageUrl,
-		//string? Headline,
-		//string? Location,
-		//string? About,
-		//string? CoverImageUrl,
-		//int? CompanyId
+	 
 		public async Task<bool> UpdateUserAsync(int id, UpdateUserRequest updateUserRequest)
 		{
 			var user = await _userRepository.GetByIdAsync(id);
@@ -157,28 +148,19 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			return true;
 		}
 
-
-
-
-
-
-		public async Task<bool> UpdateUserProfilePictureAsync(int userId, string imageUrl)
+		public async Task<string> UpdateUserProfilePictureAsync(IFormFile file, int userId)
 		{
-			try
-			{
-				var user= await _userRepository.GetByIdAsync(userId);
-				if (user == null) return false;
-				user.ProfileImageUrl = imageUrl;
-				await _userRepository.UpdateAsync(user);
-				await _userRepository.SaveChangesAsync();
-				_logger.LogInformation("Profile picture for user {UserId} updated to {Url}", userId, imageUrl);
-				return true;
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, "Error updating profile picture for user {UserId}", userId);
-				return false;
-			}
+			var user = await _userRepository.GetByIdAsync(userId);
+			if (user == null)  throw new Exception("User not found");
+
+			var (url, publicId) = await _imageService.ReplaceAsync(file, "JobPlatform/Users",user.ProfileImagePublicId);
+
+ 			user.ProfileImageUrl = url;
+			user.ProfileImagePublicId = publicId;
+			await _userRepository.UpdateAsync(user);
+			await _userRepository.SaveChangesAsync();
+
+			return url;
 		}
 	}
 }

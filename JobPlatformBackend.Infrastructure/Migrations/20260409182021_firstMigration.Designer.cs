@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JobPlatformBackend.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260401215812_deleteRelation")]
-    partial class deleteRelation
+    [Migration("20260409182021_firstMigration")]
+    partial class firstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.25")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -80,10 +80,23 @@ namespace JobPlatformBackend.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LogoUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("ProfileImagePublicId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -101,10 +114,7 @@ namespace JobPlatformBackend.Infrastructure.Migrations
                     b.Property<DateTime>("AssignedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id")
+                    b.Property<int>("Role")
                         .HasColumnType("int");
 
                     b.HasKey("UserId", "CompanyId");
@@ -306,9 +316,6 @@ namespace JobPlatformBackend.Infrastructure.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.Property<int?>("CompanyId")
-                        .HasColumnType("int");
-
                     b.Property<string>("CoverImageUrl")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -323,6 +330,11 @@ namespace JobPlatformBackend.Infrastructure.Migrations
 
                     b.Property<string>("EmailVerificationCode")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("HashPassword")
                         .IsRequired()
@@ -341,18 +353,21 @@ namespace JobPlatformBackend.Infrastructure.Migrations
                     b.Property<bool>("IsEmailVerified")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Location")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("LName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Location")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("ProfileImagePublicId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfileImageUrl")
                         .HasMaxLength(500)
@@ -365,8 +380,6 @@ namespace JobPlatformBackend.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasIndex("Email")
                         .IsUnique();
@@ -542,13 +555,6 @@ namespace JobPlatformBackend.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("JobPlatformBackend.Domain.src.Entity.User", b =>
-                {
-                    b.HasOne("JobPlatformBackend.Domain.src.Entity.Company", null)
-                        .WithMany("Admins")
-                        .HasForeignKey("CompanyId");
-                });
-
             modelBuilder.Entity("JobPlatformBackend.Domain.src.Entity.UserRefreshToken", b =>
                 {
                     b.HasOne("JobPlatformBackend.Domain.src.Entity.User", "User")
@@ -581,8 +587,6 @@ namespace JobPlatformBackend.Infrastructure.Migrations
 
             modelBuilder.Entity("JobPlatformBackend.Domain.src.Entity.Company", b =>
                 {
-                    b.Navigation("Admins");
-
                     b.Navigation("CompanyAdmins");
 
                     b.Navigation("Jobs");

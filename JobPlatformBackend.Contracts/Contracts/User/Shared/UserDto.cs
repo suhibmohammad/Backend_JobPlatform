@@ -5,7 +5,8 @@ namespace JobPlatformBackend.API.Contracts.User.Shared
 
 	public record UserDto(
 		int Id,
-		string Name,
+		string FName,
+		string LName,
  		string Email,
 		string Role,
 		bool Active,

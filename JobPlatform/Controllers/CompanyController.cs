@@ -27,6 +27,14 @@ namespace JobPlatformBackend.API.Controllers
 
 			await _companyService.CreateCompanyAsync(request,userId);
 			return Ok(new { message = "Company created successfully with you as the owner." });
-		}	
+		}
+		[HttpPost("{companyId}/logo")]
+		[Authorize]
+		public async Task<IActionResult> UploadLogo(int companyId,IFormFile file)
+		{
+			var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+			var imageUrl = await _companyService.UpdateLogoUrlCompany(file, companyId, userId);
+			return Ok(new { imageUrl = imageUrl });
+		}
 	}
 }

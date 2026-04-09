@@ -10,7 +10,9 @@ namespace JobPlatformBackend.Domain.src.Entity
 
 	public class User : SharedEnitity
 	{
-		public required string Name { get; set; }
+		public required string FName { get; set; }
+
+		public required string LName { get; set; }
 
 		public required string Email { get; set; }
 
@@ -26,6 +28,8 @@ namespace JobPlatformBackend.Domain.src.Entity
 
  
 		public string? ProfileImageUrl { get; set; }
+
+		public string? ProfileImagePublicId { get; set; }
 
 		public string? Headline { get; set; }
 

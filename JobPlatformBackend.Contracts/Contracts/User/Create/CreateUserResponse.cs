@@ -3,7 +3,8 @@
 {
 	public record CreateUserResponse
 	(
- 	string Name,
+ 	string FName,
+ 	string LName,
  	string Email,
 	string Role,
 	bool Active,

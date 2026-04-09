@@ -61,7 +61,7 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			}
 			var subject = "مرحباً بك مجدداً في منصة دروب 🚀";
 
- 			var html = _emailTemplateService.GetWelcomeEmail(user.Name);
+ 			var html = _emailTemplateService.GetWelcomeEmail(user.FName+" "+user.LName);
 
 			var sendeEmail = await _emailService.SendEmailAsync(user.Email, subject, html);
 			string token = _jwtManager.GenerateAccessToken(user);
@@ -101,7 +101,8 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 				}
 				var userEntity = new User
 				{
-					Name = sanitizedDto.Name,
+					FName = sanitizedDto.FName,
+					LName = sanitizedDto.LName,
 					Email = sanitizedDto.Email,
 					HashPassword = PassswordService.HashPassword(sanitizedDto.Password),
 					PhoneNumber = sanitizedDto.PhoneNumber,
@@ -109,8 +110,7 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 					Headline = sanitizedDto.Headline,
 					Location = sanitizedDto.Location,
 					About = sanitizedDto.About,
-					CoverImageUrl = sanitizedDto.CoverImageUrl,
- 					Role = Role.User,
+  					Role = Role.User,
 					Active = true,
 					IsDeleted = false,
 
