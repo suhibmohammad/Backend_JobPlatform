@@ -14,7 +14,7 @@ namespace JobPlatformBackend.Domain.src.Entity
 
 		public required string LName { get; set; }
 
-		public string ProfileImagePublicId { get; set; }
+		public string? ProfileImagePublicId { get; set; }
 		public required string Email { get; set; }
 
 		public required string HashPassword { get; set; }
@@ -30,8 +30,7 @@ namespace JobPlatformBackend.Domain.src.Entity
  
 		public string? ProfileImageUrl { get; set; }
 
-		public string? ProfileImagePublicId { get; set; }
-
+ 
 		public string? Headline { get; set; }
 
 		public string? Location { get; set; }
@@ -49,14 +48,11 @@ namespace JobPlatformBackend.Domain.src.Entity
 		public ICollection<CompanyAdmin> CompanyAdmins { get; set; } = new List<CompanyAdmin>();
 		public ICollection<UserSkill> UserSkills { get; set; } = new List<UserSkill>();
 
-		// منشورات المستخدم
-		public ICollection<Post> Posts { get; set; } = new List<Post>();
+ 		public ICollection<Post> Posts { get; set; } = new List<Post>();
 
-		// اللايكات التي عملها المستخدم
-		public ICollection<PostLike> PostLikes { get; set; } = new List<PostLike>();
+ 		public ICollection<PostLike> PostLikes { get; set; } = new List<PostLike>();
 
-		// التعليقات التي كتبها المستخدم
-		public ICollection<PostComment> PostComments { get; set; } = new List<PostComment>();
+ 		public ICollection<PostComment> PostComments { get; set; } = new List<PostComment>();
 	}
 
 

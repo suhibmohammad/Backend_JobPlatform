@@ -135,7 +135,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseCors("AllowAll");
-
+app.UseDeveloperExceptionPage(); // ÍØåÇ İí ÈÏÇíÉ ÇáÜ Pipeline ãÄŞÊÇğ
 app.UseAuthentication();
 app.UseAuthorization();
 

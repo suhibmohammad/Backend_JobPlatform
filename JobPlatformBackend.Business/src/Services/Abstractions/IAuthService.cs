@@ -1,16 +1,14 @@
 ﻿using JobPlatformBackend.Contracts.Contracts.User.Create;
 using JobPlatformBackend.Contracts.Contracts.User.GetAll;
 using JobPlatformBackend.Domain.src.Entity;
-<<<<<<< HEAD
-=======
+ 
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
->>>>>>> 68131f3b835cca866197072156b25dc63d360e5d
-
+ 
 namespace JobPlatformBackend.Business.src.Services.Abstractions
 {
 	public interface IAuthService

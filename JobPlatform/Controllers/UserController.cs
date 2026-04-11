@@ -3,24 +3,23 @@ using JobPlatformBackend.API.Contracts.User.Update;
 using JobPlatformBackend.Business.src.Services.Abstractions;
 using JobPlatformBackend.Contracts.Contracts.Shared;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-
 using System.Security.Claims;
 
 namespace JobPlatformBackend.API.Controllers
 {
 	[ApiController]
 	[Route("api/v1/Users")]
-
-	public class UserController(IUserService userService,ICloudinaryService cloudinaryService):ControllerBase
+	public class UserController : ControllerBase
 	{
-		
-		private readonly IUserService _userService=userService;
-		private readonly ICloudinaryService _cloudinaryService=cloudinaryService;
+		private readonly IUserService _userService;
+
+		public UserController(IUserService userService)
+		{
+			_userService = userService;
+		}
 
 		[HttpGet]
-
 		public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUser([FromQuery] QueryOptions queryOptions)
 		{
 			var users = await _userService.GetAllUserAsync(queryOptions);
@@ -31,7 +30,6 @@ namespace JobPlatformBackend.API.Controllers
 		[Authorize]
 		public async Task<ActionResult> GetUserProfileAsync()
 		{
-		 
 			var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
 
 			if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
@@ -46,11 +44,11 @@ namespace JobPlatformBackend.API.Controllers
 			return Ok(user);
 		}
 
-
 		[HttpGet("{id}")]
-		public async Task<IActionResult>GetUserById(int id)
+		public async Task<IActionResult> GetUserById(int id)
 		{
-			var user=await _userService.GetUserByIdAsync(id);
+			var user = await _userService.GetUserByIdAsync(id);
+			if (user == null) return NotFound();
 			return Ok(user);
 		}
 
@@ -60,42 +58,41 @@ namespace JobPlatformBackend.API.Controllers
 			var user = await _userService.GetUserByEmailAsync(email);
 			if (user == null)
 			{
-				return NotFound("Not found user ");
+				return NotFound("Not found user");
 			}
 			return Ok(user);
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<ActionResult<bool>>DeleteUserByIdAsync(int id)
+		public async Task<ActionResult<bool>> DeleteUserByIdAsync(int id)
 		{
 			var user = await _userService.GetUserByIdAsync(id);
-
 			if (user == null)
 				return NotFound("not found this user");
 
-			return await _userService.DeleteUserByIdAsync(id);
-
+			var result = await _userService.DeleteUserByIdAsync(id);
+			return Ok(result);
 		}
+
 		[HttpPut("{id}")]
-		public async Task<ActionResult> UpdateUser(int id,UpdateUserRequest request)
+		public async Task<ActionResult> UpdateUser(int id, UpdateUserRequest request)
 		{
 			var updateUser = await _userService.UpdateUserAsync(id, request);
 			return Ok(updateUser);
 		}
 
-
 		[HttpPost("upload-image")]
-		[Authorize] 
+		[Authorize]
 		public async Task<IActionResult> UploadProfilePicture(IFormFile file)
 		{
 			if (file == null || file.Length == 0)
-<<<<<<< HEAD
 				return BadRequest("Please upload a valid image.");
 
- 			var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-			if (userIdClaim == null) return Unauthorized();
-
-			int userId = int.Parse(userIdClaim.Value);
+			var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+			if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
+			{
+				return Unauthorized();
+			}
 
 			try
 			{
@@ -104,28 +101,8 @@ namespace JobPlatformBackend.API.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(ex.Message);
+ 				return BadRequest(new { Message = ex.Message });
 			}
-=======
-			{
-				return BadRequest("No file uploaded.");
-			}
-			var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-			if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
-			{
-				return Unauthorized();
-			}
-			 
-
-
-
-				var ImageUrl  = await _userService.UpdateUserProfilePictureAsync( file,userId);
- 				return Ok(new { Message = "Profile picture updated successfully.", ImageUrl = ImageUrl });
-			
-			
-
->>>>>>> 68131f3b835cca866197072156b25dc63d360e5d
 		}
-
 	}
 }

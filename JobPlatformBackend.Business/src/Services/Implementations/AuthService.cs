@@ -104,13 +104,8 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 					Headline = sanitizedDto.Headline,
 					Location = sanitizedDto.Location,
 					About = sanitizedDto.About,
-<<<<<<< HEAD
-  					Role = Role.User,
-=======
-					CoverImageUrl = sanitizedDto.CoverImageUrl,
-					Role = Role.User,
->>>>>>> 68131f3b835cca866197072156b25dc63d360e5d
-					Active = true,
+   					Role = Role.User,
+   					Active = true,
 					IsDeleted = false,
 
 					UserSkills = sanitizedDto.SkillIds != null

@@ -10,20 +10,20 @@ namespace JobPlatformBackend.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "ProfileImagePublicId",
-                table: "Users",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+            //migrationBuilder.AddColumn<string>(
+            //    name: "ProfileImagePublicId",
+            //    table: "Users",
+            //    type: "nvarchar(max)",
+            //    nullable: false,
+            //    defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "ProfileImagePublicId",
-                table: "Users");
+            //migrationBuilder.DropColumn(
+            //    name: "ProfileImagePublicId",
+            //    table: "Users");
         }
     }
 }

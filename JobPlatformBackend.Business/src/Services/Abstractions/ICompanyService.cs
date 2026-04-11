@@ -1,4 +1,7 @@
 ﻿using JobPlatformBackend.Contracts.Contracts.Company.Create;
+using JobPlatformBackend.Contracts.Contracts.Company.Get;
+using JobPlatformBackend.Contracts.Contracts.Company.Update;
+using JobPlatformBackend.Contracts.Contracts.Shared;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -11,10 +14,13 @@ namespace JobPlatformBackend.Business.src.Services.Abstractions
 	public interface ICompanyService
 	{
 		Task CreateCompanyAsync(CreateCompanyRequest request,int userId);
-		 Task UpdateCompanyAsync(CreateCompanyRequest request);
-		 Task DeleteCompanyAsync(int companyId);
-		 Task AddAdminToCompanyAsync(int companyId, int userId);
-		 Task RemoveAdminFromCompanyAsync(int companyId, int userId);
+		 Task UpdateCompanyAsync(UpdateCompanyRequest request, int userId);
+		 Task DeleteCompanyAsync(int companyId, int userId);
+		 Task AddAdminToCompanyAsync(CreateNewAdmin createNew,int userId);
+		 Task RemoveAdminFromCompanyAsync(int companyId, int userId, int userDelete);
 		Task<string> UpdateLogoUrlCompany(IFormFile file, int companyId, int userId);
-	}
+		Task<IEnumerable<CompanyResponse>> GetCompaniesByOwnerAsync(int userId);
+		Task<CompanyResponse> GetCompanyByIdAsync(int id);
+		Task<IEnumerable<AdminResponse>> GetAdminsByCompanyIdAsync(int companyId, int currentUserId);
+ 	}
 }

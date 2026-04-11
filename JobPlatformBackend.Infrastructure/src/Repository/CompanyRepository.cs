@@ -36,6 +36,11 @@ namespace JobPlatformBackend.Infrastructure.src.Repository
 		 return	await _context.CompanyAdmins.AnyAsync(x => x.UserId == userId &&x.CompanyId==compnyId&&x.Role==JobPlatformBackend.Domain.src.Entity.RoleCompany.Owner);
 		}
 
+		public async Task RemoveAdminFromCompanyAsync(int companyId, int userId)
+		{
+			await _context.CompanyAdmins.Where(ca => ca.UserId == userId && ca.CompanyId == companyId).ExecuteDeleteAsync();
+		}
+
 		public async Task AddAdminToCompanyAsync(CompanyAdmin companyAdmin)
 		{
 			await _context.CompanyAdmins.AddAsync(companyAdmin);
@@ -51,5 +56,21 @@ namespace JobPlatformBackend.Infrastructure.src.Repository
 			await _context.SaveChangesAsync();
 			return company;
 		}
+		public async Task<IEnumerable<Company>> GetCompaniesByUserIdAsync(int userId)
+		{
+			return await _context.CompanyAdmins
+				.Where(ca => ca.UserId == userId)
+				.Include(ca => ca.Company) // تأكد من عمل Include لجلب بيانات الشركة نفسها
+				.Select(ca => ca.Company)
+				.ToListAsync();
+		}
+		public async Task<IEnumerable<CompanyAdmin>> GetAdminsAsync(int companyId)
+		{
+			return await _context.CompanyAdmins
+				.Where(ca => ca.CompanyId == companyId)
+				.Include(ca => ca.User) // ضروري جداً لجلب FullName أو الإيميل من جدول اليوزر
+				.ToListAsync();
+		}
+
 	}
 }

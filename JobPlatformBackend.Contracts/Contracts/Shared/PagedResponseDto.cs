@@ -15,5 +15,6 @@
  		public bool HasNextPage => PageNumber < TotalPages;
 
  		public bool HasPreviousPage => PageNumber > 1;
+ 
 	}
 }

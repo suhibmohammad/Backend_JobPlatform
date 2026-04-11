@@ -9,11 +9,11 @@
 		public string? Location { get; set; }
 		public string? ProfileImagePublicId { get; set; }
 
-		public string LogoUrl { get; set; }
+		public string? LogoUrl { get; set; }
 		public ICollection<Job> Jobs { get; set; }= new List<Job>();
 		public ICollection<CompanyAdmin> CompanyAdmins { get; set; } = new List<CompanyAdmin>();
 
-		public bool isDeleted { get; set; } = false;
+		public bool IsDeleted { get; set; } = false;
 
 
 	}

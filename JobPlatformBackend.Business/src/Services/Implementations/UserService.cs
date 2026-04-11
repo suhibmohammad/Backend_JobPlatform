@@ -14,209 +14,131 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JobPlatformBackend.Business.src.Services.Implementations
 {
-<<<<<<< HEAD
-	public class UserService(IImageService imageService,AppDbContext _context,IUserRepository _userRepository,BaseService<User,UserDto> _base,ILogger<UserService>_logger) : IUserService
+	public class UserService : IUserService
 	{
-		private readonly IImageService _imageService = imageService;
-=======
-	public class UserService(ICloudinaryService cloudinaryService,AppDbContext _context,IUserRepository _userRepository,BaseService<User,UserDto> _base,ILogger<UserService>_logger) : IUserService
-	{
-		private readonly ICloudinaryService _cloudinaryService=cloudinaryService;
+		private readonly ICloudinaryService _cloudinaryService;
+		private readonly AppDbContext _context;
+		private readonly IUserRepository _userRepository;
+		private readonly BaseService<User, UserDto> _base;
+		private readonly ILogger<UserService> _logger;
 
->>>>>>> 68131f3b835cca866197072156b25dc63d360e5d
+		public UserService(
+			ICloudinaryService cloudinaryService,
+			AppDbContext context,
+			IUserRepository userRepository,
+			BaseService<User, UserDto> baseService,
+			ILogger<UserService> logger)
+		{
+			_cloudinaryService = cloudinaryService;
+			_context = context;
+			_userRepository = userRepository;
+			_base = baseService;
+			_logger = logger;
+		}
+
 		public async Task<bool> AddSkillToUserAsync(int userId, string skillName)
-		{	
-			var user =await _context.Users.Include(u=>u.UserSkills).FirstOrDefaultAsync(u=>u.Id==userId);
+		{
+			var user = await _context.Users.Include(u => u.UserSkills).FirstOrDefaultAsync(u => u.Id == userId);
 			if (user == null) return false;
+
 			var skill = await _context.Skills.FirstOrDefaultAsync(s => s.Name.ToLower() == skillName.ToLower());
 			if (skill == null)
 			{
-				skill= new Skill { Name = skillName };
+				skill = new Skill { Name = skillName };
 				_context.Skills.Add(skill);
 				await _context.SaveChangesAsync();
 			}
-			user.UserSkills.Add(new UserSkill { UserID = userId, SkillId = skill.Id });	
+
+			user.UserSkills.Add(new UserSkill { UserID = userId, SkillId = skill.Id });
 			await _context.SaveChangesAsync();
 			return true;
 		}
 
 		public async Task<bool> DeleteUserByIdAsync(int userId)
 		{
-
 			try
 			{
 				var user = await _userRepository.GetByIdAsync(userId);
-			 
+				if (user == null) return false;
 
 				var completed = await _userRepository.DeleteUser(user.Id);
 				await _context.SaveChangesAsync();
-
-				_logger.LogInformation("User with ID {UserId} deleted successfully.", userId);
 				return completed;
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, "Error deleting user with ID {UserId}", userId);
+				_logger.LogError(ex, "Error deleting user");
 				throw;
 			}
 		}
 
-		public async Task<IEnumerable<UserDto>> GetAllUserAsync(QueryOptions queryOptions )
+		public async Task<IEnumerable<UserDto>> GetAllUserAsync(QueryOptions queryOptions)
 		{
-			try { 
-		var users=	await _base.GetAll(queryOptions,DtoMapperUser.ToUserDto);
-				_logger.LogInformation("Fetched {Count} users successfully.", users.Count());
-				return users;
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, "Error occurred while fetching users with QueryOptions {@Options}", queryOptions);
-				throw;
-			}
-
-
-		}
-	public async Task<UserDto?> GetUserByEmailAsync(string email ,CancellationToken cancellationToken=default)	
-		
-		
-		
-		{			try
-			{
-				var userEntity = await _userRepository.Query()
-		.Include(u => u.UserSkills)
-			.ThenInclude(us => us.Skill)
-		.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower(), cancellationToken);
-
-
-				if (userEntity == null) return null;
- 
-				var userDto = userEntity.ToUserIncludeDto();
- 			 
-				
-				return userDto;
- 			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, "Error occurred while fetching user by Email");
-				return null;
-			}
+			return await _base.GetAll(queryOptions, DtoMapperUser.ToUserDto);
 		}
 
-	 
-
-		public async Task<UserDto?> GetUserByIdAsync(int id,CancellationToken cancellationToken)
+		public async Task<UserDto?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default)
 		{
-			try { 
-			var user=await _userRepository.Query().Where(
-				x=>x.Id==id &&x.IsDeleted==false
-				).Select(DtoMapperUser.ToUserDto).FirstOrDefaultAsync(cancellationToken);
-				_logger.LogInformation("Fetched User Successfuly");
-			return user;
-			}
-			catch(Exception ex)
-			{
-				_logger.LogError(ex, "Error occurred while fetching user");
-				throw;
-			}
+			var userEntity = await _userRepository.Query()
+				.Include(u => u.UserSkills).ThenInclude(us => us.Skill)
+				.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower(), cancellationToken);
+
+			return userEntity?.ToUserIncludeDto();
 		}
 
-	 
+		public async Task<UserDto?> GetUserByIdAsync(int id, CancellationToken cancellationToken)
+		{
+			return await _userRepository.Query()
+				.Where(x => x.Id == id && x.IsDeleted == false)
+				.Select(DtoMapperUser.ToUserDto)
+				.FirstOrDefaultAsync(cancellationToken);
+		}
+
 		public async Task<bool> UpdateUserAsync(int id, UpdateUserRequest updateUserRequest)
 		{
 			var user = await _userRepository.GetByIdAsync(id);
 			if (user == null) return false;
 
 			var requestProps = typeof(UpdateUserRequest).GetProperties();
-			var entityProps = typeof(User).GetProperties();
-
 			foreach (var prop in requestProps)
 			{
 				var value = prop.GetValue(updateUserRequest);
-				if (value != null) 
+				if (value != null)
 				{
- 					var userProp = entityProps.FirstOrDefault(p => p.Name == prop.Name);
-					if (userProp != null && userProp.CanWrite)
-					{
-						userProp.SetValue(user, value);
-					}
+					var userProp = typeof(User).GetProperty(prop.Name);
+					if (userProp != null && userProp.CanWrite) userProp.SetValue(user, value);
 				}
 			}
-
 			await _userRepository.UpdateAsync(user);
 			await _userRepository.SaveChangesAsync();
-
 			return true;
 		}
 
-<<<<<<< HEAD
 		public async Task<string> UpdateUserProfilePictureAsync(IFormFile file, int userId)
 		{
 			var user = await _userRepository.GetByIdAsync(userId);
-			if (user == null)  throw new Exception("User not found");
+			if (user == null) throw new BadRequestException("User not found");
 
-			var (url, publicId) = await _imageService.ReplaceAsync(file, "JobPlatform/Users",user.ProfileImagePublicId);
+			string? oldPublicId = user.ProfileImagePublicId;
+			var uploadResult = await _cloudinaryService.UploadImageAsync(file, "Users/UserProfilePhoto");
 
- 			user.ProfileImageUrl = url;
-			user.ProfileImagePublicId = publicId;
+			if (uploadResult?.Error != null) throw new Exception(uploadResult.Error.Message);
+
+			user.ProfileImageUrl = uploadResult.SecureUrl.ToString();
+			user.ProfileImagePublicId = uploadResult.PublicId;
+
 			await _userRepository.UpdateAsync(user);
 			await _userRepository.SaveChangesAsync();
 
-			return url;
-=======
+			if (!string.IsNullOrEmpty(oldPublicId)) await _cloudinaryService.DeleteImageAsync(oldPublicId);
 
-
-
-
-
-		public async Task<string> UpdateUserProfilePictureAsync(IFormFile file,int userId)
-		{
-
-			var user = await _userRepository.GetByIdAsync(userId);
-			if (user == null) throw new BadRequestException ("the user is not found");
-			string? newPublicId = null;
-			string? oldPublicId = user.ProfileImagePublicId;
-			try
-			{
-
-
-				var uploadResult = await _cloudinaryService.UploadImageAsync(file, "Users/UserProfilePhotot");
-				if (uploadResult == null || uploadResult.Error != null)
-				{
-					throw new Exception("Cloudinary upload failed: " + uploadResult?.Error?.Message);
-				}
-				var imageUrl = uploadResult.SecureUrl.ToString();
-				newPublicId = uploadResult.PublicId;
-
-				user.ProfileImageUrl = imageUrl;
-				user.ProfileImagePublicId = newPublicId;
-				await _userRepository.UpdateAsync(user);
-				await _userRepository.SaveChangesAsync();
-
-				if (!string.IsNullOrEmpty(oldPublicId))
-				{
-					await _cloudinaryService.DeleteImageAsync(oldPublicId);
-				}
-
-				_logger.LogInformation("Profile picture for user {UserId} updated to {Url}", userId, imageUrl);
-				return imageUrl;
-			}
-			catch (Exception ex)
-			{
-				if (!string.IsNullOrEmpty(oldPublicId))
-				{
-					await _cloudinaryService.DeleteImageAsync(oldPublicId);
-				}
-				_logger.LogError(ex, "Error while updating profile picture for user {UserId}", userId);
-				throw ;
-  			}
->>>>>>> 68131f3b835cca866197072156b25dc63d360e5d
+			return user.ProfileImageUrl;
 		}
 	}
 }
