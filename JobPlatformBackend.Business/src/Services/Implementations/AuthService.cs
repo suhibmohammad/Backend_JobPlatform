@@ -83,7 +83,14 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 				if (existingUser is not null)
 				{
 					if (!existingUser.IsEmailVerified) {
-						await _verificationService.SendEmailVerificationAsync(existingUser);
+
+					existingUser.FName = sanitizedDto.FName;
+					existingUser.LName = sanitizedDto.LName;
+					existingUser.PhoneNumber = sanitizedDto.PhoneNumber;
+					existingUser.Location = sanitizedDto.Location;
+
+					existingUser.HashPassword = PassswordService.HashPassword(sanitizedDto.Password);
+					await _verificationService.SendEmailVerificationAsync(existingUser);
 						
  					await _userRepository.SaveChangesAsync();
 					throw new EmailNotVerifiedException("Verification code resent. Please verify your email.");
@@ -100,20 +107,11 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 					Email = sanitizedDto.Email,
 					HashPassword = PassswordService.HashPassword(sanitizedDto.Password),
 					PhoneNumber = sanitizedDto.PhoneNumber,
-					ProfileImageUrl = sanitizedDto.ProfileImageUrl,
-					Headline = sanitizedDto.Headline,
-					Location = sanitizedDto.Location,
-					About = sanitizedDto.About,
-   					Role = Role.User,
+  					Location = sanitizedDto.Location,
+    					Role = Role.User,
    					Active = true,
 					IsDeleted = false,
-
-					UserSkills = sanitizedDto.SkillIds != null
-			? sanitizedDto.SkillIds.Select(skillId => new UserSkill
-			{
-				SkillId = skillId
-			}).ToList()
-			: new List<UserSkill>()
+					 
 				};
 
 				await _userRepository.AddAsync(userEntity);

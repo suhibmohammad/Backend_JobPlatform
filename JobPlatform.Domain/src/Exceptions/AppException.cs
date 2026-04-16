@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JobPlatformBackend.Domain.src.Exceptions
+﻿// File: Domain/Exceptions/AppException.cs
+public class AppException : Exception
 {
-	public abstract partial class AppException : Exception
+	public int StatusCode { get; }
+	public object? AdditionalData { get; }
+
+	public AppException(string message, int statusCode, object? additionalData = null)
+		: base(message)
 	{
-		public object? ExtraData { get; }
-
-		public int StatusCode { get; }
-
-		protected AppException(string message, int statusCode, object? extraData = null) : base(message)
-		{
-			StatusCode = statusCode;
-			ExtraData = extraData;
-		}
+		StatusCode = statusCode;
+		AdditionalData = additionalData;
 	}
 }

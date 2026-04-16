@@ -8,12 +8,8 @@ namespace JobPlatformBackend.Contracts.Contracts.User.Create
 		[Required] string Email,
  		[Required, MinLength(4)] string Password,
 		  string? PhoneNumber,
-	string? ProfileImageUrl,
-	string? Headline,
-	string? Location,
-	string? About,
-  	List<int>? SkillIds
-		)
+ 	string? Location
+  		)
 	{
 	}
 }

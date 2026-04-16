@@ -108,36 +108,35 @@ builder.Services.AddCors(options =>
 });
 
 
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// 1. Ãæá ÔíÁ ÏÇÆãÇğ åæ ÇáÜ Exception Middleware ÚÔÇä íãÓß Ãí ÎØÃ ÈÕíÑ ÊÍÊíå
+app.UseMiddleware<ExceptionMiddleware>();
+
+//if (app.Environment.IsDevelopment())
+//{
+//	// ÔíáåÇ Ãæ ÎáíåÇ ÈÚÏ ÇáãíÏá æíÑ ÊÈÚß¡ ÈÓ ÇáÃİÖá ÊÚÊãÏ Úáì ÊÈÚß ÚÔÇä ÊÔæİ ÇáÜ JSON Çááí ÈÏß ÇíÇå
+//	 app.UseDeveloperExceptionPage();
+//}
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
 	c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
 });
-app.UseMiddleware<ExceptionMiddleware>();
-app.UseMiddleware<LoggingMiddleWare>();
 
-if (app.Environment.IsDevelopment())
-{
-	app.UseDeveloperExceptionPage(); // ÈØáÚáß ÇáÎØÃ ÈÇáÊİÕíá Çáããá İí Swagger
-}
-else
-{
-	app.UseExceptionHandler("/error");
-}
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 
 app.UseRouting();
 
+// ÇáßæÑÓ ŞÈá ÇáÜ Auth ÏÇÆãÇğ
 app.UseCors("AllowAll");
-app.UseDeveloperExceptionPage(); // ÍØåÇ İí ÈÏÇíÉ ÇáÜ Pipeline ãÄŞÊÇğ
+
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<LoggingMiddleWare>(); // Îáøí ÇááæÌäÌ ÂÎÑ ÔíÁ ŞÈá ÇáßäÊÑæáÑÒ
 
 app.MapControllers();
 
