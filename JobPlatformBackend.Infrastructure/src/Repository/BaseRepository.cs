@@ -31,6 +31,14 @@ namespace JobPlatformBackend.Infrastructure.src.Repository
 			}
 			return _dbSet.AsNoTracking();
 		}
+		public async Task<int> CountAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+		{
+			if (predicate != null)
+			{
+				return await _dbSet.CountAsync(predicate, cancellationToken);
+			}
+			return await _dbSet.CountAsync(cancellationToken);
+		}
 
 		// 🔹 Get by Id
 		public async Task<TEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default)

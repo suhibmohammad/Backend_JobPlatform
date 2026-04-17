@@ -19,7 +19,7 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			_repo = repo;
 		}
 
-		public async Task<IEnumerable<TDto>> GetAll(QueryOptions options, Expression<Func<TEntity, TDto>> mapper)
+		public async Task<PagedResponseDto<TDto>> GetAll(QueryOptions options, Expression<Func<TEntity, TDto>> mapper)
 		{
 			var query = _repo.Query().AsNoTracking();
 
@@ -54,8 +54,8 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 						query = query.Where(Expression.Lambda<Func<TEntity, bool>>(combined, param));
 				}
 			}
-
- 			if (!string.IsNullOrEmpty(options.SortBy))
+			int totalCount = await query.CountAsync();
+			if (!string.IsNullOrEmpty(options.SortBy))
 			{
  				var prop = typeof(TEntity).GetProperty(options.SortBy,
 					BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
@@ -77,6 +77,10 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 					);
 					query = query.Provider.CreateQuery<TEntity>(resultExp);
 				}
+				else
+				{
+					query=query.OrderBy(e => e.Id);
+				}
 			}
 
 			// --- 3. الترقيم (Pagination) ---
@@ -84,11 +88,19 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			int size = Math.Clamp(options.PageSize, 1, 100); // استخدام Math.Clamp كطريقة أنظف
 
 			// --- 4. التحويل والتنفيذ (Final Execution) ---
-			return await query
+			var items= await query
 				.Skip((page - 1) * size)
 				.Take(size)
 				.Select(mapper)
 				.ToListAsync();
+
+			return new PagedResponseDto<TDto>
+			{
+				Items = items,
+				TotalCount = totalCount,
+				PageNumber = page,
+				PageSize = size
+			};
 		}
 	}
 }

@@ -1,11 +1,12 @@
-﻿using JobPlatformBackend.Domain.src.Entity;
+﻿using JobPlatformBackend.Contracts.Contracts.Application;
+using JobPlatformBackend.Domain.src.Entity;
 
 namespace JobPlatformBackend.Domain.src.Abstractions
 {
 	public interface IApplicationRepository : IBaseRepository<Application> { 
 	
 		// get all applications for a specific job
-	Task <IEnumerable<Application>> GetByJobIdAsync(int jobId);
+	Task <IEnumerable<ApplicationResponse>> GetByJobIdAsync(int jobId);
 
 		//get all applications by a specific user
 	Task<IEnumerable<Application>> GetByUserIdAsync();

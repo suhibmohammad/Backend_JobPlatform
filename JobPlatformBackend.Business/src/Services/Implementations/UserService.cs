@@ -78,7 +78,7 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			}
 		}
 
-		public async Task<IEnumerable<UserDto>> GetAllUserAsync(QueryOptions queryOptions)
+		public async Task<PagedResponseDto<UserDto>> GetAllUserAsync(QueryOptions queryOptions)
 		{
 			return await _base.GetAll(queryOptions, DtoMapperUser.ToUserDto);
 		}

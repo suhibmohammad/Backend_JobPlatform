@@ -22,5 +22,7 @@ namespace JobPlatformBackend.Business.src.Services.Abstractions
 		Task<IEnumerable<CompanyResponse>> GetCompaniesByOwnerAsync(int userId);
 		Task<CompanyResponse> GetCompanyByIdAsync(int id);
 		Task<IEnumerable<AdminResponse>> GetAdminsByCompanyIdAsync(int companyId, int currentUserId);
+
+		Task <PagedResponseDto<CompanyResponse>> GetAllCompaniesAsync(QueryOptions options);
  	}
 }

@@ -21,5 +21,6 @@ namespace JobPlatformBackend.Domain.src.Abstractions
 		Task DeleteAsync(TEntity entity);
 
 		Task SaveChangesAsync(CancellationToken cancellationToken = default);
+		Task<int> CountAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
 	}
 }

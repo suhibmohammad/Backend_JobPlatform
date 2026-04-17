@@ -15,7 +15,7 @@ namespace JobPlatformBackend.Business.src.Services.Abstractions
 	{
 
 		Task<bool> UpdateUserAsync(int id, UpdateUserRequest updateUserRequest);
-		Task<IEnumerable<UserDto>>GetAllUserAsync(QueryOptions queryOptions);
+		Task<PagedResponseDto<UserDto>>GetAllUserAsync(QueryOptions queryOptions);
 
 		Task<UserDto?> GetUserByIdAsync(int id, CancellationToken cancellationToken=default);
 		Task<bool> DeleteUserByIdAsync(int userId);

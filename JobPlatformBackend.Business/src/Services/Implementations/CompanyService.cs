@@ -2,6 +2,7 @@
 using JobPlatformBackend.Contracts.Contracts.Company.Create;
 using JobPlatformBackend.Contracts.Contracts.Company.Get;
 using JobPlatformBackend.Contracts.Contracts.Company.Update;
+using JobPlatformBackend.Contracts.Contracts.Shared;
 using JobPlatformBackend.Contracts.Contracts.User.Shared;
 using JobPlatformBackend.Domain.src.Abstractions;
 using JobPlatformBackend.Domain.src.Entity;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,11 +22,13 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 		private readonly ICompanyRepository _companyRepository;
 		private readonly IImageService _imageService;
 		private readonly ISanitizerService _sanitizerService;
-		public CompanyService(ICompanyRepository companyRepository,IImageService imageService,ISanitizerService sanitizerService)
+		private readonly BaseService<Company, CompanyResponse> _base;
+		public CompanyService(ICompanyRepository companyRepository,IImageService imageService,ISanitizerService sanitizerService, BaseService<Company, CompanyResponse> baseService)
 		{
 			_companyRepository = companyRepository;
 			_sanitizerService = sanitizerService;
 			_imageService = imageService;
+			_base = baseService;
 		}
 		public async Task AddAdminToCompanyAsync(CreateNewAdmin createNew,int userId)
 		{
@@ -189,7 +193,17 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			return admins.Select(a => new AdminResponse(a.UserId, a.User.FName + " " + a.User.LName, a.Role.ToString()));
 		}
 
-
-
+		public async Task<PagedResponseDto<CompanyResponse>> GetAllCompaniesAsync(QueryOptions options)
+		{
+			Expression<Func<Company,CompanyResponse>> mapper= company=>new CompanyResponse
+			(
+				company.Id,
+				company.Name,
+				company.Descriptoin,
+				company.Location,
+				company.LogoUrl
+			);
+			return await _base.GetAll(options, mapper);
+		}
 	}
 }

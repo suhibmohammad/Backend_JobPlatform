@@ -141,6 +141,11 @@ namespace JobPlatformBackend.API.Controllers
 			catch (UnauthorizedAccessException) { return Forbid(); }
 			catch (Exception ex) { return BadRequest(ex.Message); }
 		}
+		[HttpPost("companies")]
+		public async Task <ActionResult> GetAllCompany(QueryOptions query)
+		{
+		  return  Ok (await	_companyService.GetAllCompaniesAsync(query));
+		}
 
 
 	}
