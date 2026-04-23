@@ -64,8 +64,10 @@ namespace JobPlatformBackend.API.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<ActionResult<bool>> DeleteUserByIdAsync(int id)
+		[Authorize]
+		public async Task<ActionResult<bool>> DeleteUserByIdAsync()
 		{
+			int id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 			var user = await _userService.GetUserByIdAsync(id);
 			if (user == null)
 				return NotFound("not found this user");
@@ -75,8 +77,10 @@ namespace JobPlatformBackend.API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult> UpdateUser(int id, UpdateUserRequest request)
+		[Authorize]
+		public async Task<ActionResult> UpdateUser( UpdateUserRequest request)
 		{
+			int id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 			var updateUser = await _userService.UpdateUserAsync(id, request);
 			return Ok(updateUser);
 		}

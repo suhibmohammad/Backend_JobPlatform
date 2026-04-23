@@ -3,7 +3,9 @@ using JobPlatformBackend.Contracts.Contracts.Jop;
 using JobPlatformBackend.Contracts.Contracts.Jop.Create;
 using JobPlatformBackend.Contracts.Contracts.Jop.Get;
 using JobPlatformBackend.Contracts.Contracts.Jop.Update;
+using JobPlatformBackend.Domain.src.Entity;
 using JobPlatformBackend.Infrastructure.src.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -21,8 +23,11 @@ namespace JobPlatformBackend.API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<JobResponseDto>> CreateJob(CreateJobRequest request, int userId)
+		[Authorize]
+		public async Task<ActionResult<JobResponseDto>> CreateJob(CreateJobRequest request)
 		{
+			int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
 			var result = await _jobService.CreatJobAsync(request, userId);
 			return Ok(
 				result
@@ -55,21 +60,25 @@ namespace JobPlatformBackend.API.Controllers
 		}
 
 		[HttpDelete("{id}")]
+		[Authorize]
 		
-		public async Task<IActionResult> DeleteJob(int id,int adminId)
+		public async Task<IActionResult> DeleteJob(int adminId)
 		{
- 			await _jobService.DeleteJobAsync(id, adminId);
+			int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+
+			await _jobService.DeleteJobAsync(userId, adminId);
 
 			return NoContent(); 
 		}
 
 		[HttpPut("{jobId:int}")]
-		public async Task<IActionResult> EditJob(int adminId, int jobId, [FromBody] UpdateRequestDto request)
+		public async Task<IActionResult> EditJob( int jobId, [FromBody] UpdateRequestDto request)
 		{
-		 
- 
-			 
-			await _jobService.EditJobAsync(  jobId, adminId, request);
+
+			int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+			await _jobService.EditJobAsync(  jobId, userId, request);
  
 			return Ok(new { Message = "تم تحديث بيانات الوظيفة والمهارات بنجاح" });
 		}

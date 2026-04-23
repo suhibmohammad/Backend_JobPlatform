@@ -16,6 +16,6 @@ namespace JobPlatformBackend.Business.src.Services.Abstractions
 		Task<PagedResponseDto<ApplicationResponse>> GetApplicationsByJobIdAsync(int userId, GetAllApplicationRequest request);
 
 		Task<bool> ApplyToJobAsync(int userId,int jobId, IFormFile cvFile);
-
+		Task<bool> DeleteApplicationAsync(int userId, int applicationId);
 	}
 }
