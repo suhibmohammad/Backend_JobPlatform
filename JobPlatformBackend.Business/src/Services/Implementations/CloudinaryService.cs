@@ -65,16 +65,15 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 			if (file?.Length > 0)
 			{
 				using var stream = file.OpenReadStream();
-				var uploadParams = new ImageUploadParams
+				var uploadParams = new RawUploadParams
 				{
 					File = new FileDescription(file.FileName, stream),
 					Folder = folderName,
-					// حدد اسم الـ Preset اللي بالصورة
- 					// تأكد إن الـ Type هو "upload" والـ AccessMode هو "public"
-					Type = "upload",
-					AccessMode = "public"
+					PublicId=file.FileName,
+ 					AccessMode = "public"
+					
 				};
-				uploadResult = await _cloudinary.UploadAsync(uploadParams);
+				uploadResult = await _cloudinary.UploadAsync(uploadParams,"raw");
 			}
 			return uploadResult;
 		}

@@ -76,7 +76,7 @@ namespace JobPlatformBackend.API.Controllers
 			return Ok(result);
 		}
 
-		[HttpPut("{id}")]
+		[HttpPut("user")]
 		[Authorize]
 		public async Task<ActionResult> UpdateUser( UpdateUserRequest request)
 		{

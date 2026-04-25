@@ -37,7 +37,7 @@ namespace JobPlatformBackend.Business.src.Services.Implementations
 
 		public async Task<(string Url, string PublicId)> UploadAsync(IFormFile file, string folder)
 		{
-		var result = await _cloudinaryService.UploadFileAsync(file, folder);
+ 		var result = await _cloudinaryService.UploadFileAsync(file, folder);
 			return (result.SecureUrl.ToString(), result.PublicId);
 		}
 	}

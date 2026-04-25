@@ -90,7 +90,14 @@ namespace JobPlatformBackend.Infrastructure.src.Repository
 			return Task.CompletedTask;
 		}
 
-	 
+	 public Task GetCountAsync (Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+		{
+			if (predicate != null)
+			{
+				return _dbSet.CountAsync(predicate, cancellationToken);
+			}
+			return _dbSet.CountAsync(cancellationToken);
+		}
 
 		public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
 		{

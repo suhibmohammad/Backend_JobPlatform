@@ -9,7 +9,7 @@ namespace JobPlatformBackend.Domain.src.Abstractions
 	Task <IEnumerable<ApplicationResponse>> GetByJobIdAsync(int jobId, int pageNumber, int pageSize);
 
 		//get all applications by a specific user
-	Task<IEnumerable<Application>> GetByUserIdAsync();
+		public Task<IEnumerable<Application>> GetByUserIdAsync(int userId, int pageNumber, int pageSize);
 		//update application status
 	Task<Application>UpdateStatusAsync(int applicationId,StatusApplication status);
 

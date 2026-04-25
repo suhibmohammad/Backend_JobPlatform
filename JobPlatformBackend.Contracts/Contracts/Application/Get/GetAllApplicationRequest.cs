@@ -8,6 +8,4 @@ namespace JobPlatformBackend.Contracts.Contracts.Application.Get
 {
 	public record GetAllApplicationRequest(int JobId, int CompanyId, int PageNumber, int PageSize);
 
-
-
 }

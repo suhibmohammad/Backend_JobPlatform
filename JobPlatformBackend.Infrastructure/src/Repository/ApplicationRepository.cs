@@ -34,14 +34,17 @@ namespace JobPlatformBackend.Infrastructure.src.Repository
 			var applications = await _application.AsNoTracking().Where(a => a.JobId == jobId).OrderByDescending(a => a.CreatedAt)
 				.Skip((pageNumber - 1) * pageSize).Take(pageSize)
 				.Select(
-				a=>new ApplicationResponse(a.Id, a.UserId, a.User.FName+" "+a.User.LName, a.User.Email, a.JobId, a.Job.Title, a.CreatedAt, a.CvUrl)
+				a=>new ApplicationResponse(a.Id, a.UserId, a.User.FName+" "+a.User.LName, a.User.Email, a.JobId,a.Status.ToString() ,a.Job.Title, a.CreatedAt, a.CvUrl)
 				).ToListAsync();
 			return applications;
 		}
 
-		public Task<IEnumerable<Application>> GetByUserIdAsync()
+		public Task<IEnumerable<Application>> GetByUserIdAsync(int userId, int pageNumber, int pageSize)
 		{
-			throw new NotImplementedException();
+			var applications = _application.AsNoTracking().Include(a=>a.Job).ThenInclude(j=>j.Company).Where(a => a.UserId == userId).OrderByDescending(a => a.CreatedAt)
+				.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+			return Task.FromResult(applications.AsEnumerable());
+
 		}
 
 		public Task<Application> GetWithDetailsAsync(int applicationId)
@@ -49,9 +52,16 @@ namespace JobPlatformBackend.Infrastructure.src.Repository
 			throw new NotImplementedException();
 		}
 
-		public Task<Application> UpdateStatusAsync(int applicationId,StatusApplication status)
+		public async Task<Application> UpdateStatusAsync(int applicationId,StatusApplication status)
 		{
-			throw new NotImplementedException();
+			var application =await _application.Include(a=>a.Job).FirstOrDefaultAsync(a => a.Id == applicationId);
+			if (application == null)
+			{
+				_logger.LogWarning("Application with id {ApplicationId} not found", applicationId);
+				return null;
+			}
+			application.Status = status;
+			return application;
 		}
 
 		public async Task<bool> GetByUserIdAndJobIdAsync(int userId, int jobId)

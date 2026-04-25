@@ -13,6 +13,7 @@ namespace JobPlatformBackend.Contracts.Contracts.Application
 		string UserName,
 		string UserEmail,
 		int JobId,
+		string Status,
 		string JobTitle,
 		DateTime AppliedAt,
 		string CvUrl
